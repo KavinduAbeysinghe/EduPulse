@@ -30,22 +30,24 @@ const SearchTable = ({
 }: TableData) => {
   const StyledTableCell = styled(TableCell)(({ theme }: any) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#F0F4F8",
-      color: theme.palette.text.primary,
+      color: "rgb(123, 128, 154)",
+      // backgroundColor: "#F0F4F8",
+      fontWeight: 600,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
+      color: theme.palette.text.secondary,
     },
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
+    // "&:nth-of-type(odd)": {
+    //   backgroundColor: theme.palette.action.hover,
+    // },
+    // // hide last border
+    // "&:last-child td, &:last-child th": {
+    //   border: 0,
+    // },
   }));
 
   const [page, setPage] = useState(1);
@@ -61,12 +63,7 @@ const SearchTable = ({
   };
 
   return (
-    <TableContainer
-      sx={{
-        boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-        borderRadius: "10px",
-      }}
-    >
+    <TableContainer>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>

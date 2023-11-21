@@ -1,0 +1,16 @@
+.custom-divider {
+  flex-shrink: 0 !important;
+  border-top: 0px solid rgba(0, 0, 0, 0.08) !important;
+  border-right: 0px solid rgba(0, 0, 0, 0.08) !important;
+  border-left: 0px solid rgba(0, 0, 0, 0.08) !important;
+  height: 0.0625rem !important;
+  border-bottom: none !important;
+  opacity: 0.25 !important;
+  background-color: transparent !important;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgb(255, 255, 255),
+    rgba(255, 255, 255, 0)
+  ) !important;
+}

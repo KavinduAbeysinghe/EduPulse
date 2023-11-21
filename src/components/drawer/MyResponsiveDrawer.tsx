@@ -142,27 +142,27 @@ export const MyResponsiveDrawer = () => {
           justifyContent: "center",
         }}
       >
-        <Typography fontWeight={700} color={"text.secondary"}>
+        <Typography fontWeight={700} color={"#fff"}>
           Edu Pulse
         </Typography>
         {/* <IconButton>
           <WbSunnyRoundedIcon fontSize="small" />
         </IconButton> */}
       </Toolbar>
-      <Divider />
+      <Divider className="custom-divider" />
       <List>
         {sideBarOptions.map((opt: any) => (
           <ListItem key={opt?.name} disablePadding>
             <ListItemButton onClick={() => handleNavigate(opt?.path)}>
-              <ListItemIcon color="text.secondary">{opt?.icon}</ListItemIcon>
+              <ListItemIcon color="#fff">{opt?.icon}</ListItemIcon>
               <ListItemText
                 color="text.secondary"
                 primary={opt?.name}
                 sx={{
                   ".MuiTypography-root": {
                     fontSize: "0.9rem",
-                    fontWeight: 500,
-                    color: "gray",
+                    // fontWeight: 500,
+                    color: "#fff",
                   },
                 }}
               />
@@ -215,7 +215,7 @@ export const MyResponsiveDrawer = () => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "background.default",
+          backgroundColor: "transparent",
           color: "text.primary",
           boxShadow: "none",
         }}
@@ -280,9 +280,14 @@ export const MyResponsiveDrawer = () => {
           sx={{
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
+              // margin: "1rem",
+              // borderRadius: "10px",
+              // height: "calc(100vh - 2rem)",
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#FBFCFE !important",
+              // backgroundColor: "#FBFCFE !important",
+              background:
+                "linear-gradient(195deg, rgb(66, 66, 74), rgb(25, 25, 25)) !important",
             },
           }}
           open

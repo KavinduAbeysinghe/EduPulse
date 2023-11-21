@@ -1,0 +1,47 @@
+.primary-button {
+  position: relative !important;
+  box-sizing: border-box !important;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: 0px !important;
+  border: 0px !important;
+  margin: 0px !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  appearance: none !important;
+  text-decoration: none !important;
+  font-family: Roboto, Helvetica, Arial, sans-serif !important;
+  letter-spacing: 0.02857em !important;
+  min-width: 64px !important;
+  display: inline-flex !important;
+  -webkit-box-pack: center !important;
+  justify-content: center !important;
+  -webkit-box-align: center !important;
+  align-items: center !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  border-radius: 0.5rem !important;
+  line-height: 1.4 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  user-select: none !important;
+  transition: all 150ms ease-in 0s !important;
+  min-height: 2.5rem !important;
+  padding: 0.625rem 1.5rem !important;
+  background-image: linear-gradient(
+    195deg,
+    rgb(73, 163, 241),
+    rgb(26, 115, 232)
+  ) !important;
+  background-position-y: initial !important;
+  background-repeat: initial !important;
+  background-attachment: initial !important;
+  background-origin: initial !important;
+  background-clip: initial !important;
+  background-color: initial !important;
+  color: rgb(255, 255, 255) !important;
+  box-shadow: rgba(26, 115, 232, 0.15) 0rem 0.1875rem 0.1875rem 0rem,
+    rgba(26, 115, 232, 0.2) 0rem 0.1875rem 0.0625rem -0.125rem,
+    rgba(26, 115, 232, 0.15) 0rem 0.0625rem 0.3125rem 0rem !important;
+  background-size: 150% !important;
+  background-position-x: 25% !important;
+}

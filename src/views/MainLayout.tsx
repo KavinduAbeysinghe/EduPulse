@@ -18,7 +18,7 @@ const Layout = () => {
   const drawerWidth = 210;
 
   return (
-    <Box display={"flex"}>
+    <Box display={"flex"} sx={{ backgroundColor: "rgb(240, 242, 245)" }}>
       <CssBaseline />
       <MyResponsiveDrawer />
       <Box
@@ -28,11 +28,12 @@ const Layout = () => {
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           pt: 10,
+          height: "100vh",
         }}
       >
         <Routes>
           <Route element={<Dashboard />} path="/dashboard" />
-          <Route element={<CourseManagement />} path="/course-management" />
+          <Route element={<CourseManagement />} path="/course-management/*" />
         </Routes>
       </Box>
     </Box>
