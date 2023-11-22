@@ -142,7 +142,9 @@ export const SearchCourse = () => {
   return (
     <>
       <CustomBackdrop open={showBackdrop} />
-      <PrimaryButton text={"+ Add Course"} onClick={handleCreate} />
+      <Box>
+        <PrimaryButton text={"+ Add Course"} onClick={handleCreate} />
+      </Box>
       <Box className={"basic-card"} mt={2}>
         <Box px={2}>
           <Stack

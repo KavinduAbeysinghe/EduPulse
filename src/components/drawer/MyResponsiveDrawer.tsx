@@ -18,7 +18,7 @@ import {
   InputBase,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfilePic from "../../assets/images/person3.jpg";
@@ -109,7 +109,7 @@ export const MyResponsiveDrawer = () => {
     {
       name: "Modules",
       icon: <ViewModuleIcon fontSize="small" />,
-      path: "/control/dashboard",
+      path: "/control/module-management",
     },
     {
       name: "Forums",
@@ -119,7 +119,7 @@ export const MyResponsiveDrawer = () => {
     {
       name: "Users",
       icon: <PeopleRoundedIcon fontSize="small" />,
-      path: "/control/dashboard",
+      path: "/control/user-management",
     },
   ];
 
@@ -154,7 +154,7 @@ export const MyResponsiveDrawer = () => {
         {sideBarOptions.map((opt: any) => (
           <ListItem key={opt?.name} disablePadding>
             <ListItemButton onClick={() => handleNavigate(opt?.path)}>
-              <ListItemIcon color="#fff">{opt?.icon}</ListItemIcon>
+              <ListItemIcon sx={{ color: "#fff" }}>{opt?.icon}</ListItemIcon>
               <ListItemText
                 color="text.secondary"
                 primary={opt?.name}
@@ -178,7 +178,9 @@ export const MyResponsiveDrawer = () => {
           alignItems={"center"}
           m={2}
           p={2}
-          sx={{ backgroundColor: "primary.dark", borderRadius: "10px" }}
+          className="bottom-logout-view"
+          //   sx={{ borderBottomRightRadius: "50px" }}
+          //   sx={{ backgroundColor: "primary.dark", borderRadius: "10px" }}
         >
           <Avatar alt="Remy Sharp" src="" />
           <Box textAlign={"center"}>
@@ -208,9 +210,18 @@ export const MyResponsiveDrawer = () => {
     </div>
   );
 
+  //   const [appBarClass, setAppbarClass]= = useState<string>("");
+
+  //   useEffect(() => {
+  //     if (window.scroll > 0) {
+
+  //     }
+  //   }, []);
+
   return (
     <>
       <AppBar
+        className=""
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
@@ -238,7 +249,7 @@ export const MyResponsiveDrawer = () => {
           >
             <Breadcrumb />
 
-            <Search>
+            {/* <Search>
               <SearchIconWrapper>
                 <SearchRoundedIcon />
               </SearchIconWrapper>
@@ -246,7 +257,7 @@ export const MyResponsiveDrawer = () => {
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
               />
-            </Search>
+            </Search> */}
           </Stack>
         </Toolbar>
       </AppBar>
@@ -280,9 +291,9 @@ export const MyResponsiveDrawer = () => {
           sx={{
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
-              // margin: "1rem",
-              // borderRadius: "10px",
-              // height: "calc(100vh - 2rem)",
+              //   margin: "1rem",
+              //   borderBottomRightRadius: "50px",
+              //   height: "calc(100vh - 2rem)",
               boxSizing: "border-box",
               width: drawerWidth,
               // backgroundColor: "#FBFCFE !important",

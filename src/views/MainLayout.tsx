@@ -4,6 +4,8 @@ import { Dashboard } from "./dashboard/Dashboard";
 import { Box, CssBaseline } from "@mui/material";
 import { MyResponsiveDrawer } from "../components/drawer/MyResponsiveDrawer";
 import { CourseManagement } from "./courseManagement/CourseManagement";
+import { ModuleManagement } from "./moduleManagement/ModuleManagement";
+import { UserManagement } from "./userManagement/UserManagement";
 
 export const MainLayout = () => {
   return (
@@ -26,14 +28,18 @@ const Layout = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          pt: 10,
+          overflow: "auto",
           height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          pt: 10,
         }}
       >
         <Routes>
           <Route element={<Dashboard />} path="/dashboard" />
           <Route element={<CourseManagement />} path="/course-management/*" />
+          <Route element={<ModuleManagement />} path="/module-management/*" />
+          <Route element={<UserManagement />} path="/user-management/*" />
         </Routes>
       </Box>
     </Box>
