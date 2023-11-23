@@ -90,12 +90,13 @@ export const SearchModules = () => {
         <PrimaryButton text={"+ Add Module"} onClick={handleCreate} />
       </Box>
       <Grid container rowSpacing={7} columnSpacing={2}>
-        <Grid item md={12}>
+        <Grid item xs={12} sm={12} md={12}>
           <Box className={"basic-card"} px={3}>
             <Stack
               direction={"row"}
               justifyContent={"space-between"}
               alignItems={"center"}
+              flexWrap={"wrap"}
             >
               <Typography className={"card-heading"}>Search Modules</Typography>
               <Chip
@@ -105,7 +106,7 @@ export const SearchModules = () => {
               />
             </Stack>
             <Grid container mt={1} spacing={2}>
-              <Grid item md={12}>
+              <Grid item xs={12} sm={12} md={12}>
                 <Typography fontSize={"small"} color={"text.secondary"} mb={1}>
                   Select the course first *
                 </Typography>
@@ -122,7 +123,7 @@ export const SearchModules = () => {
                   watch={watch}
                 />
               </Grid>
-              <Grid item md={4.5}>
+              <Grid item xs={12} sm={12} md={4}>
                 <FormAutocomplete
                   error={false}
                   helperText={""}
@@ -136,7 +137,7 @@ export const SearchModules = () => {
                   watch={watch}
                 />
               </Grid>
-              <Grid item md={4.5}>
+              <Grid item xs={12} sm={12} md={4}>
                 <FormAutocomplete
                   error={false}
                   helperText={""}
@@ -150,26 +151,38 @@ export const SearchModules = () => {
                   watch={watch}
                 />
               </Grid>
-              <Grid item md={2}>
-                <FormDropdown
-                  label={"Year"}
-                  name={"year"}
-                  options={[]}
-                  helperText={""}
-                  control={control}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item md={1}>
+              <Grid item xs={12} sm={12} md={4} display={"flex"} gap={1}>
+                <Box flexGrow={1}>
+                  <FormDropdown
+                    label={"Year"}
+                    name={"year"}
+                    options={[]}
+                    helperText={""}
+                    control={control}
+                    fullWidth
+                  />
+                </Box>
                 <IconButton onClick={handleSubmit(handleSearch)}>
                   <SearchRoundedIcon />
                 </IconButton>
               </Grid>
+              {/* <Grid item xs={1} sm={1} md={1}>
+                <IconButton onClick={handleSubmit(handleSearch)}>
+                  <SearchRoundedIcon />
+                </IconButton>
+              </Grid> */}
             </Grid>
           </Box>
         </Grid>
         {moduleData?.map((d: any) => (
-          <Grid item md={4}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            display={"flex"}
+            justifyContent={"center"}
+          >
             <ModuleCard
               img={d?.img}
               title={d?.title}

@@ -1,1 +1,12 @@
 @import url("./assets/styles/Main.scss");
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #bdbdbd;
+}

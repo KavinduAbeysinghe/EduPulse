@@ -6,6 +6,7 @@ import { MyResponsiveDrawer } from "../components/drawer/MyResponsiveDrawer";
 import { CourseManagement } from "./courseManagement/CourseManagement";
 import { ModuleManagement } from "./moduleManagement/ModuleManagement";
 import { UserManagement } from "./userManagement/UserManagement";
+import { ForumManagement } from "../components/forums/ForumManagement";
 
 export const MainLayout = () => {
   return (
@@ -40,6 +41,10 @@ const Layout = () => {
           <Route element={<CourseManagement />} path="/course-management/*" />
           <Route element={<ModuleManagement />} path="/module-management/*" />
           <Route element={<UserManagement />} path="/user-management/*" />
+          <Route
+            element={<ForumManagement />}
+            path="/discussions-and-forums/*"
+          />
         </Routes>
       </Box>
     </Box>

@@ -5,7 +5,9 @@ import {
   IconButton,
   InputAdornment,
   Stack,
+  ThemeProvider,
   Typography,
+  createTheme,
 } from "@mui/material";
 import { FormTextField } from "../../components/inputs/FormTextField";
 import { FormButton } from "../../components/buttons/FormButton";
@@ -52,20 +54,32 @@ export const Login = () => {
     }, 1000);
   };
 
+  const textsArr = [
+    "Sign in to Edu Pulse and embark on a seamless learning adventure.",
+    "Unlock a world of knowledge with our intuitive learning management system.",
+    "Dive into engaging courses, track your progress, and elevate your education experience.",
+  ];
+
+  const theme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CustomBackdrop open={showBackdrop} />
-      <Box height={"100vh"}>
+      <Box height={"100vh"} className={"login-container"}>
         <Grid container height={"100%"}>
           <Grid
             item
             xs={12}
             sm={6}
             md={7}
-            p={3}
+            py={3}
+            pl={3}
             position={"relative"}
             // overflow={"hidden"}
-            border={"1px solid white"}
           >
             <img
               src="https://media.edapp.com/image/upload/v1600109548/registration/login-background.jpg"
@@ -74,7 +88,8 @@ export const Login = () => {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                borderRadius: "17px",
+                borderTopLeftRadius: "17px",
+                borderBottomLeftRadius: "17px",
               }}
             />
             <Box p={10} position={"absolute"} top={0} zIndex={2}>
@@ -86,96 +101,112 @@ export const Login = () => {
               <Typography mt={1} color={"#eee"}>
                 Your Learning Partner
               </Typography>
+              {textsArr?.map((d: string, index) => (
+                <Typography
+                  key={index}
+                  color={"#000"}
+                  className="login-form"
+                  p={3}
+                  mt={5}
+                  sx={{
+                    display: "inline-block",
+                    borderTopRightRadius: "1000px",
+                    borderBottomRightRadius: "1000px",
+                    borderBottomLeftRadius: "1000px",
+                  }}
+                >
+                  {d}
+                </Typography>
+              ))}
             </Box>
           </Grid>
-          <Grid
-            item
-            p={3}
-            xs={12}
-            sm={6}
-            md={5}
-            textAlign={"center"}
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            position={"relative"}
-          >
-            <Stack
-              width={"380px"}
-              direction={"column"}
+          <Grid item my={3} pr={3} xs={12} sm={6} md={5}>
+            <Box
+              height={"100%"}
+              className="login-form"
+              textAlign={"center"}
+              display={"flex"}
+              alignItems={"center"}
               justifyContent={"center"}
+              position={"relative"}
             >
-              <Typography fontWeight={700} variant="h5">
-                Welcome Back
-              </Typography>
-              <Typography color={"text.secondary"} mb={5}>
-                Login to Continue
-              </Typography>
-              <Stack direction={"column"} gap={3}>
-                <FormTextField
-                  register={register("username")}
-                  label={"Username"}
-                  error={!!errors?.username?.message}
-                  helperText={errors?.username?.message?.toString()}
-                />
-                <Box>
+              <Stack
+                width={"380px"}
+                direction={"column"}
+                justifyContent={"center"}
+              >
+                <Typography fontWeight={700} variant="h5">
+                  Welcome Back
+                </Typography>
+                <Typography color={"text.secondary"} mb={5}>
+                  Login to Continue
+                </Typography>
+                <Stack direction={"column"} gap={3}>
                   <FormTextField
-                    register={register("password")}
-                    error={!!errors?.password?.message}
-                    helperText={errors?.password?.message?.toString()}
-                    label={"Password"}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position={"end"}>
-                          <IconButton
-                            size={"small"}
-                            onClick={handlePasswordToggle}
-                          >
-                            {!showPassword ? (
-                              <FontAwesomeIcon icon={faEye} />
-                            ) : (
-                              <FontAwesomeIcon icon={faEyeSlash} />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
+                    register={register("username")}
+                    label={"Username"}
+                    error={!!errors?.username?.message}
+                    helperText={errors?.username?.message?.toString()}
                   />
-                  <Stack
-                    direction={"row"}
-                    justifyContent={"space-between"}
-                    alignItems={"center"}
-                    mt={2}
-                    flexWrap={"wrap"}
-                  >
-                    <FormSwitch control={undefined} label={"Remember Me"} />
-                    <Typography color={"text.secondary"} textAlign={"end"}>
-                      Forgot Password?
-                    </Typography>
-                  </Stack>
-                </Box>
+                  <Box>
+                    <FormTextField
+                      register={register("password")}
+                      error={!!errors?.password?.message}
+                      helperText={errors?.password?.message?.toString()}
+                      label={"Password"}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position={"end"}>
+                            <IconButton
+                              size={"small"}
+                              onClick={handlePasswordToggle}
+                            >
+                              {!showPassword ? (
+                                <FontAwesomeIcon icon={faEye} />
+                              ) : (
+                                <FontAwesomeIcon icon={faEyeSlash} />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                      mt={2}
+                      flexWrap={"wrap"}
+                    >
+                      <FormSwitch control={undefined} label={"Remember Me"} />
+                      <Typography color={"text.secondary"} textAlign={"end"}>
+                        Forgot Password?
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Stack>
+                <Stack mt={5} direction={"column"} gap={2}>
+                  <FormButton
+                    text={"Login"}
+                    variant="contained"
+                    fullWidth
+                    onClick={handleSubmit(onSubmit)}
+                  />
+                  <Divider>Or</Divider>
+                  <FormButton
+                    text={"Continue with Email"}
+                    variant="outlined"
+                    fullWidth
+                  />
+                </Stack>
+                <Typography mt={5} color={"text.secondary"}>
+                  © Edu Pulse 2023
+                </Typography>
               </Stack>
-              <Stack mt={5} direction={"column"} gap={2}>
-                <FormButton
-                  text={"Login"}
-                  variant="contained"
-                  fullWidth
-                  onClick={handleSubmit(onSubmit)}
-                />
-                <Divider>Or</Divider>
-                <FormButton
-                  text={"Continue with Email"}
-                  variant="outlined"
-                  fullWidth
-                />
-              </Stack>
-              <Typography mt={5} color={"text.secondary"}>
-                © Edu Pulse 2023
-              </Typography>
-            </Stack>
+            </Box>
           </Grid>
         </Grid>
       </Box>
-    </>
+    </ThemeProvider>
   );
 };

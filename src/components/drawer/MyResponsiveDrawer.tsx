@@ -114,7 +114,7 @@ export const MyResponsiveDrawer = () => {
     {
       name: "Forums",
       icon: <QuizRoundedIcon fontSize="small" />,
-      path: "/control/dashboard",
+      path: "/control/discussions-and-forums",
     },
     {
       name: "Users",

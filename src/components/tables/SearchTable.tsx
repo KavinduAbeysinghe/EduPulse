@@ -1,6 +1,8 @@
 import {
+  IconButton,
   Pagination,
   Paper,
+  Popover,
   styled,
   Table,
   TableBody,
@@ -9,9 +11,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import ActionButton from "../buttons/ActionButton";
+import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface TableData {
   tableData: Array<any>;
@@ -19,6 +26,7 @@ interface TableData {
   id: string;
   actionButtons?: Array<any>;
   paginate: boolean;
+  viewMoreOptions?: Array<any>;
 }
 
 const SearchTable = ({
@@ -27,6 +35,7 @@ const SearchTable = ({
   id,
   actionButtons,
   paginate,
+  viewMoreOptions,
 }: TableData) => {
   const StyledTableCell = styled(TableCell)(({ theme }: any) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -62,6 +71,22 @@ const SearchTable = ({
     setPage(newPage);
   };
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("clicked");
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const ID = open ? "simple-popover" : undefined;
+
   return (
     <TableContainer>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -73,6 +98,11 @@ const SearchTable = ({
               </StyledTableCell>
             ))}
             {actionButtons?.length ? (
+              <StyledTableCell></StyledTableCell>
+            ) : (
+              <></>
+            )}
+            {viewMoreOptions?.length ? (
               <StyledTableCell></StyledTableCell>
             ) : (
               <></>
@@ -107,6 +137,41 @@ const SearchTable = ({
                         }}
                       />
                     ))}
+                  </StyledTableCell>
+                ) : (
+                  <></>
+                )}
+                {viewMoreOptions?.length ? (
+                  <StyledTableCell align="right">
+                    <Tooltip title={"More"}>
+                      <IconButton onClick={handleClick}>
+                        <FontAwesomeIcon
+                          fontSize={"large"}
+                          icon={faEllipsis}
+                          style={{
+                            cursor: "pointer",
+                            marginLeft: 5,
+                            marginRight: 5,
+                            color: "gray",
+                            verticalAlign: "center",
+                          }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                    <Popover
+                      id={ID}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                    >
+                      <Typography sx={{ p: 2 }}>
+                        The content of the Popover.
+                      </Typography>
+                    </Popover>
                   </StyledTableCell>
                 ) : (
                   <></>
