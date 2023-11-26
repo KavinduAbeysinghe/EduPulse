@@ -5,6 +5,11 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import { PrimaryButton } from "../buttons/PrimaryButton";
 import { ForumCard } from "./ForumCard";
 import bg1 from "../../assets/images/abstract.jpg";
+import bg2 from "../../assets/images/bgimg1.jpg";
+import bg3 from "../../assets/images/bgimg2.jpg";
+import bg4 from "../../assets/images/bgimg3.jpg";
+import bg5 from "../../assets/images/bgimg4.jpg";
+import bg6 from "../../assets/images/bgimg5.jpg";
 import p1 from "../../assets/images/person3.jpg";
 import p2 from "../../assets/images/person4.jpg";
 import p3 from "../../assets/images/person5.jpg";
@@ -13,9 +18,13 @@ import p5 from "../../assets/images/person7.jpg";
 import { SearchField } from "../inputs/SearchField";
 import { InnerModal } from "../modals/CustomModal";
 import { StartDiscussionForum } from "./StartDiscussionForum";
+import { useNavigate } from "react-router-dom";
 
 export const SearchForums = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
   const forumsData = [
     {
       id: 1,
@@ -35,7 +44,7 @@ export const SearchForums = () => {
       date: "2023-02-05",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg2,
     },
     {
       id: 3,
@@ -45,7 +54,7 @@ export const SearchForums = () => {
       date: "2023-03-10",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg3,
     },
     {
       id: 4,
@@ -55,7 +64,7 @@ export const SearchForums = () => {
       date: "2023-04-02",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg4,
     },
     {
       id: 5,
@@ -65,7 +74,7 @@ export const SearchForums = () => {
       date: "2023-05-20",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg5,
     },
     {
       id: 6,
@@ -85,7 +94,7 @@ export const SearchForums = () => {
       date: "2023-07-15",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg2,
     },
     {
       id: 8,
@@ -95,12 +104,16 @@ export const SearchForums = () => {
       date: "2023-08-03",
       people: [p1, p2, p3, p4, p5],
       code: "F1001",
-      img: bg1,
+      img: bg3,
     },
   ];
 
   const handleStartDiscuss = () => {
     setShowModal(true);
+  };
+
+  const handleNavigateViewDiss = () => {
+    navigate("/control/discussions-and-forums/view");
   };
 
   return (
@@ -114,7 +127,7 @@ export const SearchForums = () => {
       />
       <Grid container rowSpacing={7} columnSpacing={2}>
         <Grid item md={12}>
-          <BgCard color={"#26588b"}>
+          <BgCard color={"#26588b"} onClick={handleNavigateViewDiss}>
             <Typography color={"#fff"} mb={2} textAlign={"justify"}>
               Welcome to our vibrant community hub! 🌐 Engage, connect, and
               share your thoughts on a multitude of topics. Start meaningful
@@ -136,9 +149,7 @@ export const SearchForums = () => {
               img={d?.img}
               title={`${d?.code} - ${d?.title}`}
               date={d?.date}
-              action={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              action={handleNavigateViewDiss}
               people={d?.people}
               description={d?.description}
             />

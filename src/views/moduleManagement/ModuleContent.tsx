@@ -2,9 +2,20 @@ import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 import { useRef, useState } from "react";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
+import { FormCard } from "../../components/common/FormCard";
+import { PrimaryButton } from "../../components/buttons/PrimaryButton";
+import { ModuleContentCard } from "./ModuleContentCard";
+import CustomizedAccordions from "../../components/accordion/CustomAccordion";
+import file from "../../assets/files/sample.pdf";
+import { InnerModal } from "../../components/modals/CustomModal";
+import { AddModuleMaterial } from "./AddModuleMaterial";
 
 export const ModuleContent = () => {
   const [files, setFiles] = useState<Array<any>>([]);
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const [modalDetails, setModalDetails] = useState<any>(null);
 
   const fileInputRef = useRef<any>(null);
 
@@ -41,51 +52,97 @@ export const ModuleContent = () => {
     // notify.success("File upload success");
   };
 
+  const moduleMaterials = [
+    {
+      title: "Week 1",
+      data: [
+        {
+          title: "Database Management Systems Lecture",
+          file: file,
+        },
+        {
+          title: "Database Management Systems Tutorial",
+          file: file,
+        },
+      ],
+    },
+    {
+      title: "Week 2",
+      data: [
+        {
+          title: "Database Management Systems Lecture",
+          file: file,
+        },
+        {
+          title: "Database Management Systems Tutorial",
+          file: file,
+        },
+      ],
+    },
+    {
+      title: "Week 3",
+      data: [
+        {
+          title: "Database Management Systems Lecture",
+          file: file,
+        },
+        {
+          title: "Database Management Systems Tutorial",
+          file: file,
+        },
+      ],
+    },
+    {
+      title: "Week 4",
+      data: [
+        {
+          title: "Database Management Systems Lecture",
+          file: file,
+        },
+        {
+          title: "Database Management Systems Tutorial",
+          file: file,
+        },
+      ],
+    },
+  ];
+
+  const openModuleMaterialsModal = () => {
+    setModalDetails({
+      title: "Add Module Materials",
+      body: <AddModuleMaterial />,
+    });
+  };
+
   return (
-    <Box className={"basic-card"} px={3}>
-      <Stack
-        direction={"row"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-      >
-        <Typography className="card-heading">Module Materials</Typography>
-        <Chip icon={<RefreshRoundedIcon />} label="Reset" onClick={() => {}} />
-      </Stack>
-      <Box
-        p={3}
-        className={"dotted-container"}
-        mt={1}
-        display={"flex"}
-        flexDirection={"column"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        gap={1}
-        sx={{
-          border: "1px dashed gray",
-          borderRadius: "10px",
-          transition: "all .5s ease-in-out",
-          cursor: "pointer",
-          ":hover": { backgroundColor: "rgba(255, 255, 255, 0.08)" },
-        }}
-        onClick={handleBoxClick}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <DriveFolderUploadIcon
-          fontSize={"large"}
-          sx={{ fontSize: "70px", color: "gray" }}
-        />
-        <Typography color={"gray"}>
-          Click or Drag & Drop Files to Upload
-        </Typography>
-        <Typography color={"gray"}>Max Size 2 MB</Typography>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-      </Box>
-    </Box>
+    <>
+      <InnerModal
+        open={showModal}
+        setOpen={setShowModal}
+        maxWidth={"sm"}
+        title={modalDetails?.title}
+        body={modalDetails?.body}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={12} md={12}>
+          <ModuleContentCard
+            header={"Module Materials"}
+            onAddClick={openModuleMaterialsModal}
+          >
+            <CustomizedAccordions data={moduleMaterials} />
+          </ModuleContentCard>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <ModuleContentCard header={"Assignments"} onAddClick={() => {}}>
+            <CustomizedAccordions data={moduleMaterials} />
+          </ModuleContentCard>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <ModuleContentCard header={"Quizes"} onAddClick={() => {}}>
+            <CustomizedAccordions data={moduleMaterials} />
+          </ModuleContentCard>
+        </Grid>
+      </Grid>
+    </>
   );
 };

@@ -84,6 +84,10 @@ export const SearchModules = () => {
     console.log(data);
   };
 
+  const handleViewModule = () => {
+    navigate("/control/module-management/view-module");
+  };
+
   return (
     <>
       <Box mb={2}>
@@ -190,9 +194,7 @@ export const SearchModules = () => {
               lead={d?.lead}
               status={d?.status}
               date={d?.status}
-              action={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              action={handleViewModule}
             />
           </Grid>
         ))}

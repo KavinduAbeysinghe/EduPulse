@@ -1,5 +1,5 @@
 import { Avatar, Box, Grid } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
@@ -8,6 +8,8 @@ import { FormDropdown } from "../../components/dropdowns/FormDropdown";
 import { FormTextField } from "../../components/inputs/FormTextField";
 
 export const CreateUserForm = () => {
+  const [uploadedImg, setUploadedImg] = useState<any>("");
+
   const {
     register,
     setValue,
@@ -35,7 +37,7 @@ export const CreateUserForm = () => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
-      //   setUploadedImg(e!.target!.result);
+      setUploadedImg(e!.target!.result);
     };
     if (file && file.size < maxFileSize) {
       if (file.type === "image/png" || file.type === "image/jpeg") {
@@ -179,7 +181,7 @@ export const CreateUserForm = () => {
               <Box sx={{ display: "inline-block" }}>
                 <Avatar
                   alt="Uploaded Img"
-                  src={""}
+                  src={uploadedImg}
                   sx={{
                     width: 100,
                     height: 100,
@@ -187,7 +189,7 @@ export const CreateUserForm = () => {
                     transition: "0.2s all ease-in-out",
                     cursor: "pointer",
                   }}
-                  onClick={() => {}}
+                  onClick={handleAvatarClick}
                 />
                 <input
                   type="file"

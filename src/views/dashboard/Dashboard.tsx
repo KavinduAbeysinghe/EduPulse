@@ -340,7 +340,7 @@ export const Dashboard = () => {
                     ref={progressGridRef}
                     container
                     rowSpacing={2}
-                    columnSpacing={10}
+                    columnSpacing={2}
                     mt={2}
                   >
                     {activityOverviewData?.map((d: any) => (

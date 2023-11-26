@@ -16,11 +16,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
 import { useNavigate } from "react-router-dom";
+import AlertDialogSlide from "../../components/modals/AlertDialog";
 
 export const SearchUser = () => {
   const navigate = useNavigate();
   const [adminTableData, setAdminTableData] = useState<Array<any>>([]);
-
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const resetSearch = () => {};
 
   const { register, watch, handleSubmit, setValue, reset, control } = useForm(
@@ -85,76 +86,103 @@ export const SearchUser = () => {
     },
   ];
 
-  return (
-    <Grid container columnSpacing={2} rowSpacing={2}>
-      <Grid item md={12}>
-        <PrimaryButton text={"+ Add User"} onClick={handleNavigateAddUser} />
-        <Box className={"basic-card"} mt={2} px={3}>
-          <Stack
-            direction={"row"}
-            gap={1}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Typography
-              className="card-heading"
-              fontSize={"large"}
-              fontWeight={600}
-            >
-              Search Users
-            </Typography>
+  const handleNavigateView = () => {
+    navigate("/control/user-management/view-user");
+  };
 
-            <Chip
-              icon={<RefreshRoundedIcon />}
-              label="Refresh"
-              onClick={resetSearch}
+  const handleNavigateEdit = () => {
+    navigate("/control/user-management/edit-user");
+  };
+
+  const handleDelete = () => {
+    setShowAlert(true);
+  };
+
+  const actionButtons = [
+    { tooltip: "View", icon: faEye, handleClick: handleNavigateView },
+    { tooltip: "Edit", icon: faPenToSquare, handleClick: handleNavigateEdit },
+    { tooltip: "Delete", icon: faTrash, handleClick: handleDelete },
+  ];
+
+  return (
+    <>
+      <AlertDialogSlide
+        message={"Do you want to remove this user?"}
+        handleYesClick={() => {}}
+        handleNoClick={() => setShowAlert(false)}
+        openAlert={showAlert}
+        setOpenAlert={setShowAlert}
+      />
+      <Grid container columnSpacing={2} rowSpacing={2}>
+        <Grid item md={12}>
+          <PrimaryButton text={"+ Add User"} onClick={handleNavigateAddUser} />
+          <Box className={"basic-card"} mt={2} px={3}>
+            <Stack
+              direction={"row"}
+              gap={1}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography
+                className="card-heading"
+                fontSize={"large"}
+                fontWeight={600}
+              >
+                Search Users
+              </Typography>
+
+              <Chip
+                icon={<RefreshRoundedIcon />}
+                label="Refresh"
+                onClick={resetSearch}
+              />
+            </Stack>
+            <Grid container spacing={2} my={1}>
+              <Grid item md={4}>
+                <FormTextField register={undefined} label={"Username"} />
+              </Grid>
+              <Grid item md={4}>
+                <FormAutocomplete
+                  error={false}
+                  helperText={undefined}
+                  setValue={setValue}
+                  label={"Designation"}
+                  options={[]}
+                  id={""}
+                  required={false}
+                  disabled={false}
+                  control={control}
+                  watch={watch}
+                />
+              </Grid>
+              <Grid item md={4} display={"flex"} gap={1}>
+                <FormAutocomplete
+                  error={false}
+                  helperText={undefined}
+                  setValue={setValue}
+                  label={"Module"}
+                  options={[]}
+                  id={""}
+                  required={false}
+                  disabled={false}
+                  control={control}
+                  watch={watch}
+                />
+                <IconButton onClick={handleSubmit(handleSearch)}>
+                  <SearchRoundedIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <SearchTable
+              tableData={adminTableData}
+              tableHeaders={tableHeadsAdmins}
+              id={""}
+              paginate={true}
+              actionButtons={actionButtons}
             />
-          </Stack>
-          <Grid container spacing={2} my={1}>
-            <Grid item md={4}>
-              <FormTextField register={undefined} label={"Username"} />
-            </Grid>
-            <Grid item md={4}>
-              <FormAutocomplete
-                error={false}
-                helperText={undefined}
-                setValue={setValue}
-                label={"Designation"}
-                options={[]}
-                id={""}
-                required={false}
-                disabled={false}
-                control={control}
-                watch={watch}
-              />
-            </Grid>
-            <Grid item md={4} display={"flex"} gap={1}>
-              <FormAutocomplete
-                error={false}
-                helperText={undefined}
-                setValue={setValue}
-                label={"Module"}
-                options={[]}
-                id={""}
-                required={false}
-                disabled={false}
-                control={control}
-                watch={watch}
-              />
-              <IconButton onClick={handleSubmit(handleSearch)}>
-                <SearchRoundedIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-          <SearchTable
-            tableData={adminTableData}
-            tableHeaders={tableHeadsAdmins}
-            id={""}
-            paginate={true}
-            viewMoreOptions={viewMoreOptions}
-          />
-        </Box>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };

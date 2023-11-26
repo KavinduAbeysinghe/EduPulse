@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { useNavigate } from "react-router-dom";
+import { PrimaryButton } from "../../components/buttons/PrimaryButton";
 
 export const Login = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
@@ -186,12 +187,16 @@ export const Login = () => {
                   </Box>
                 </Stack>
                 <Stack mt={5} direction={"column"} gap={2}>
-                  <FormButton
+                  <PrimaryButton
+                    text={"Login"}
+                    onClick={handleSubmit(onSubmit)}
+                  />
+                  {/* <FormButton
                     text={"Login"}
                     variant="contained"
                     fullWidth
                     onClick={handleSubmit(onSubmit)}
-                  />
+                  /> */}
                   <Divider>Or</Divider>
                   <FormButton
                     text={"Continue with Email"}

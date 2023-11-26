@@ -96,11 +96,11 @@ export const MyResponsiveDrawer = () => {
       icon: <DashboardRoundedIcon fontSize="small" />,
       path: "/control/dashboard",
     },
-    {
-      name: "Workspace",
-      icon: <WorkspacesRoundedIcon fontSize="small" />,
-      path: "/control/dashboard",
-    },
+    // {
+    //   name: "Workspace",
+    //   icon: <WorkspacesRoundedIcon fontSize="small" />,
+    //   path: "/control/dashboard",
+    // },
     {
       name: "Courses",
       icon: <AssignmentRoundedIcon fontSize="small" />,
