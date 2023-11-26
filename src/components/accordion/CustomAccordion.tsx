@@ -20,6 +20,7 @@ import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import { InnerModal } from "../modals/CustomModal";
 import { DocPreviewModal } from "../modals/DocPreviewModal";
 import { useState } from "react";
+import { QuizModal } from "../modals/QuizModal";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -59,14 +60,19 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 interface CustomizedAccordionsProps {
   data: Array<any>;
+  isQuiz: boolean;
 }
 
 export default function CustomizedAccordions({
   data,
+  isQuiz,
 }: CustomizedAccordionsProps) {
   const [showModal, setShowModal] = React.useState(false);
+  const [showQModal, setShowQModal] = React.useState(false);
 
   const [docDetails, setDocDetails] = useState<any>(null);
+
+  const [quizData, setQuizData] = useState<any>(null);
 
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
 
@@ -93,16 +99,31 @@ export default function CustomizedAccordions({
     setShowModal(true);
   };
 
+  const handlePreviewQuiz = (data: any) => {
+    console.log(data);
+    setQuizData(data);
+    setShowQModal(true);
+  };
+
   return (
     <div>
-      <DocPreviewModal
-        open={showModal}
-        setOpen={setShowModal}
-        maxWidth={"lg"}
-        doc={docDetails?.doc}
-        docType={docDetails?.docType}
-        title={docDetails?.docTitle}
-      />
+      {quizData && (
+        <QuizModal
+          open={showQModal}
+          setOpen={setShowQModal}
+          quizData={quizData}
+        />
+      )}
+      {docDetails && (
+        <DocPreviewModal
+          open={showModal}
+          setOpen={setShowModal}
+          maxWidth={"lg"}
+          doc={docDetails?.doc}
+          docType={docDetails?.docType}
+          title={docDetails?.docTitle}
+        />
+      )}
       {data?.map((d: any, index) => (
         <Accordion
           key={index}
@@ -131,16 +152,26 @@ export default function CustomizedAccordions({
                 <ListItem
                   disablePadding
                   secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="download"
-                      onClick={() => handleDownloadFile(e?.file)}
-                    >
-                      <DownloadRoundedIcon />
-                    </IconButton>
+                    !isQuiz ? (
+                      <IconButton
+                        edge="end"
+                        aria-label="download"
+                        onClick={() => handleDownloadFile(e)}
+                      >
+                        <DownloadRoundedIcon />
+                      </IconButton>
+                    ) : (
+                      <></>
+                    )
                   }
                 >
-                  <ListItemButton onClick={() => handlePreviewFile(e?.file)}>
+                  <ListItemButton
+                    onClick={() =>
+                      !isQuiz
+                        ? handlePreviewFile(e?.file)
+                        : handlePreviewQuiz(e)
+                    }
+                  >
                     <ListItemIcon>
                       <InsertDriveFileRoundedIcon />
                     </ListItemIcon>

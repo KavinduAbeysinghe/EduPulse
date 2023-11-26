@@ -22,7 +22,7 @@ export const ModuleContentCard: React.FC<any> = ({
         alignItems={"center"}
       >
         <CardHeading text={header} />
-        <PrimaryButton text={"+ Add"} onClick={() => onAddClick} />
+        <PrimaryButton text={"+ Add"} onClick={onAddClick} />
       </Stack>
       <Box mt={3}>{children}</Box>
     </Box>

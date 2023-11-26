@@ -1,118 +1,85 @@
-import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
-import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
-import { useRef, useState } from "react";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
-import { FormCard } from "../../components/common/FormCard";
-import { PrimaryButton } from "../../components/buttons/PrimaryButton";
+import { Grid, Typography } from "@mui/material";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ModuleContentCard } from "./ModuleContentCard";
 import CustomizedAccordions from "../../components/accordion/CustomAccordion";
-import file from "../../assets/files/sample.pdf";
 import { InnerModal } from "../../components/modals/CustomModal";
 import { AddModuleMaterial } from "./AddModuleMaterial";
+import { useFieldArray, useForm } from "react-hook-form";
+import { moduleMaterials, quizData } from "../../util";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export const ModuleContent = () => {
-  const [files, setFiles] = useState<Array<any>>([]);
-
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const [modalDetails, setModalDetails] = useState<any>(null);
 
-  const fileInputRef = useRef<any>(null);
+  const [sectionList, setSectionList] = useState<Array<any>>([]);
 
-  const handleBoxClick = () => {
-    // Trigger file input click on Box click
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+  const defaultValues = {
+    moduleMaterials: [],
+    quizes: [],
   };
 
-  const handleFileChange = (e: any) => {
-    // Handle the selected files here
-    const selectedFiles = e.target.files[0];
-    setFiles((prevFiles) => {
-      const newFiles = [...prevFiles];
-      newFiles.push(selectedFiles);
-      return newFiles;
-    });
-    // notify.success("File upload success");
-  };
+  const validationSchema = Yup.object().shape({
+    moduleMaterials: Yup.array(),
+    quizes: Yup.array(),
+  });
 
-  const handleDragOver = (e: any) => {
-    e.preventDefault();
-  };
+  const { control, setValue } = useForm({
+    defaultValues: defaultValues,
+    resolver: yupResolver(validationSchema),
+  });
 
-  const handleDrop = (e: any) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files[0];
-    setFiles((prevFiles) => {
-      const newFiles = [...prevFiles];
-      newFiles.push(files);
-      return newFiles;
-    });
-    // notify.success("File upload success");
-  };
+  const {
+    fields: moduleMaterialsFields,
+    remove: removeModuleMaterials,
+    append: appendModuleMaterials,
+  } = useFieldArray({
+    control,
+    name: "moduleMaterials",
+  });
 
-  const moduleMaterials = [
-    {
-      title: "Week 1",
-      data: [
-        {
-          title: "Database Management Systems Lecture",
-          file: file,
-        },
-        {
-          title: "Database Management Systems Tutorial",
-          file: file,
-        },
-      ],
-    },
-    {
-      title: "Week 2",
-      data: [
-        {
-          title: "Database Management Systems Lecture",
-          file: file,
-        },
-        {
-          title: "Database Management Systems Tutorial",
-          file: file,
-        },
-      ],
-    },
-    {
-      title: "Week 3",
-      data: [
-        {
-          title: "Database Management Systems Lecture",
-          file: file,
-        },
-        {
-          title: "Database Management Systems Tutorial",
-          file: file,
-        },
-      ],
-    },
-    {
-      title: "Week 4",
-      data: [
-        {
-          title: "Database Management Systems Lecture",
-          file: file,
-        },
-        {
-          title: "Database Management Systems Tutorial",
-          file: file,
-        },
-      ],
-    },
-  ];
+  const {
+    fields: quizFields,
+    remove: removeQuiz,
+    append: appendQuiz,
+  } = useFieldArray({
+    control,
+    name: "quizes",
+  });
 
-  const openModuleMaterialsModal = () => {
+  useEffect(() => {
+    setValue("moduleMaterials", moduleMaterials);
+    setValue("quizes", quizData);
+  }, [moduleMaterials, quizData]);
+
+  const setModuleMaterialModalDetails = () => {
     setModalDetails({
       title: "Add Module Materials",
-      body: <AddModuleMaterial />,
+      body: (
+        <AddModuleMaterial
+          moduleMaterials={moduleMaterialsFields}
+          appendModuleMaterials={appendModuleMaterials}
+          sectionList={moduleMaterialsFields?.map((m: any) => ({
+            label: m?.title,
+            value: m?.id,
+          }))}
+        />
+      ),
     });
   };
+
+  const openModuleMaterialsModal = () => {
+    setModuleMaterialModalDetails();
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (moduleMaterialsFields?.length > 0) {
+      setModuleMaterialModalDetails();
+    }
+  }, [moduleMaterialsFields]);
 
   return (
     <>
@@ -129,17 +96,24 @@ export const ModuleContent = () => {
             header={"Module Materials"}
             onAddClick={openModuleMaterialsModal}
           >
-            <CustomizedAccordions data={moduleMaterials} />
+            {moduleMaterialsFields.length ? (
+              <CustomizedAccordions
+                data={moduleMaterialsFields}
+                isQuiz={false}
+              />
+            ) : (
+              <Typography>No Module Materials Available</Typography>
+            )}
           </ModuleContentCard>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <ModuleContentCard header={"Assignments"} onAddClick={() => {}}>
-            <CustomizedAccordions data={moduleMaterials} />
+            <CustomizedAccordions data={moduleMaterials} isQuiz={false} />
           </ModuleContentCard>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <ModuleContentCard header={"Quizes"} onAddClick={() => {}}>
-            <CustomizedAccordions data={moduleMaterials} />
+            <CustomizedAccordions data={quizFields} isQuiz={true} />
           </ModuleContentCard>
         </Grid>
       </Grid>

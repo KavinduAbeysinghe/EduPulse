@@ -113,7 +113,7 @@ export const CreateModule = () => {
         <Chip icon={<RefreshRoundedIcon />} label="Reset" onClick={() => {}} />
       </Stack>
       <Grid container mt={1} spacing={2}>
-        <Grid item md={12}>
+        <Grid item xs={12} sm={12} md={12}>
           <Typography fontSize={"small"} mb={1}>
             Select the course first *
           </Typography>
@@ -122,31 +122,31 @@ export const CreateModule = () => {
             label={"Related Course"}
           />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={12} md={3}>
           <FormTextField
             register={register("moduleName")}
             label={"Module Code"}
           />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={12} md={3}>
           <FormTextField
             register={register("moduleName")}
             label={"Module Name"}
           />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={12} md={3}>
           <FormTextField
             register={register("moduleName")}
             label={"Module Lead"}
           />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={12} md={3}>
           <FormTextField
             register={register("moduleName")}
             label={"Created Date"}
           />
         </Grid>
-        <Grid item md={12}>
+        <Grid item xs={12} sm={12} md={12}>
           <FormTextField
             register={register("moduleName")}
             label={"Module Description"}
@@ -154,7 +154,7 @@ export const CreateModule = () => {
         </Grid>
       </Grid>
       <Grid container mt={2} spacing={2}>
-        <Grid item md={5.5}>
+        <Grid item xs={12} sm={12} md={5.5}>
           <Typography mb={1} fontWeight={600}>
             Add Learning Objectives
           </Typography>
@@ -177,7 +177,7 @@ export const CreateModule = () => {
         <Grid item md={1} display={"flex"} justifyContent={"center"}>
           <Divider orientation="vertical" />
         </Grid>
-        <Grid item md={5.5}>
+        <Grid item xs={12} sm={12} md={5.5}>
           <Typography mb={1} fontWeight={600}>
             Add Colloborators
           </Typography>
