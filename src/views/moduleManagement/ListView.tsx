@@ -13,9 +13,15 @@ interface ListViewProps {
   isAvatarExists: boolean;
   data: Array<any>;
   setData: any;
+  disabled?: boolean;
 }
 
-export const ListView = ({ isAvatarExists, data, setData }: ListViewProps) => {
+export const ListView = ({
+  isAvatarExists,
+  data,
+  setData,
+  disabled,
+}: ListViewProps) => {
   const handleRemove = (id: any) => {
     setData((prev: any) => [...prev]?.filter((i) => i?.id !== id));
   };
@@ -27,18 +33,22 @@ export const ListView = ({ isAvatarExists, data, setData }: ListViewProps) => {
           <ListItem
             key={index}
             secondaryAction={
-              <IconButton
-                onClick={() => handleRemove(d?.id)}
-                edge="end"
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </IconButton>
+              !disabled ? (
+                <IconButton
+                  onClick={() => handleRemove(d?.id)}
+                  edge="end"
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              ) : (
+                <></>
+              )
             }
           >
             {isAvatarExists && (
               <ListItemAvatar>
-                <Avatar></Avatar>
+                <Avatar alt="collaborator avatar" src={d?.profileImg} />
               </ListItemAvatar>
             )}
             <ListItemText primary={d?.primary} secondary={d?.secondary} />

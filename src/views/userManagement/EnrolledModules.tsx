@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
@@ -11,6 +11,11 @@ import { SearchButton } from "../../components/buttons/SearchButton";
 import SearchTable from "../../components/tables/SearchTable";
 
 export const EnrolledModules = () => {
+  const [data, setData] = useState<Array<any>>([]);
+  const [enrolledModuleTblData, setEnrolledModuleTblData] = useState<
+    Array<any>
+  >([]);
+
   const {
     register,
     setValue,
@@ -72,9 +77,9 @@ export const EnrolledModules = () => {
             fullWidth
             label={"Year"}
           />
-          <SearchButton />
+          <SearchButton sx={{ mb: 0.5 }} />
         </Grid>
-        <Grid item md={12}>
+        <Grid item xs={12} sm={12} md={12}>
           <SearchTable
             tableData={[]}
             tableHeaders={coursesTableHeads}

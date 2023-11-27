@@ -9,7 +9,7 @@
   vertical-align: middle !important;
   appearance: none !important;
   text-decoration: none !important;
-  font-family: Roboto, Helvetica, Arial, sans-serif !important;
+  // font-family: Roboto, Helvetica, Arial, sans-serif !important;
   letter-spacing: 0.02857em !important;
   min-width: 64px !important;
   display: inline-flex !important;
@@ -44,4 +44,16 @@
     rgba(26, 115, 232, 0.15) 0rem 0.0625rem 0.3125rem 0rem !important;
   background-size: 150% !important;
   background-position-x: 25% !important;
+}
+
+.primary-button-2 {
+  background-image: linear-gradient(
+    195deg,
+    rgb(73, 163, 241),
+    rgb(26, 115, 232)
+  ) !important;
+  color: rgb(255, 255, 255) !important;
+  box-shadow: rgba(26, 115, 232, 0.15) 0rem 0.1875rem 0.1875rem 0rem,
+    rgba(26, 115, 232, 0.2) 0rem 0.1875rem 0.0625rem -0.125rem,
+    rgba(26, 115, 232, 0.15) 0rem 0.0625rem 0.3125rem 0rem !important;
 }

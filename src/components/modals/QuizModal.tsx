@@ -13,6 +13,7 @@ import {
   RadioGroup,
   Stack,
   Typography,
+  linearProgressClasses,
 } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -144,11 +145,22 @@ export const QuizModal = ({ open, setOpen, quizData }: QuizModalProps) => {
                 <Typography fontWeight={600}>{getTime()}</Typography>
               </Stack>
             </Stack>
-            <LinearProgress variant="determinate" value={progressValue} />
+            <LinearProgress
+              variant="determinate"
+              value={progressValue}
+              sx={{
+                height: 10,
+                borderRadius: "500px",
+                [`& .${linearProgressClasses.bar}`]: {
+                  background:
+                    "linear-gradient(195deg, rgb(73, 163, 241),rgb(26, 115, 232))",
+                },
+              }}
+            />
           </Box>
           <Grid container spacing={2} mt={3}>
             {questions?.map((q: any, index) => (
-              <Grid item md={12} mx={3}>
+              <Grid key={q?.questionId} item md={12} mx={3}>
                 <Divider textAlign="left">
                   <Chip
                     label={`Question ${index + 1}`}
@@ -156,7 +168,6 @@ export const QuizModal = ({ open, setOpen, quizData }: QuizModalProps) => {
                   />
                 </Divider>
                 <CustomRadioGroup
-                  key={q?.questionId}
                   options={q?.options?.map((i: any) => ({
                     label: i?.option,
                     value: i?.optionId,

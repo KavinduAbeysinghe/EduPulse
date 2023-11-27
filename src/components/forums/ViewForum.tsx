@@ -1,13 +1,14 @@
 import {
   Avatar,
   Box,
+  Collapse,
   Divider,
   Grid,
   Grow,
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import bg from "../../assets/images/bgimg3.jpg";
 import { MessageView } from "./MessageView";
 import { FormTextField } from "../inputs/FormTextField";
@@ -20,50 +21,56 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import p1 from "../../assets/images/person.jpg";
 import { useForm } from "react-hook-form";
 import { CustomChip } from "../chips/CustomChip";
+import { TransitionGroup } from "react-transition-group";
+import { useLocation } from "react-router-dom";
+import { forumData, userData } from "../../util";
+import dayjs from "dayjs";
+import { CustomBackdrop } from "../backdrops/CustomBackdrop";
 
 export const ViewForum = () => {
-  const [replyList, setReplyList] = useState<Array<any>>([
-    {
-      name: "John Smith",
-      designation: "Computer Science Student",
-      profileImg: p1,
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, deserunt doloremque? Tenetur modi, aperiam ad magni officia quaerat! Quis possimus odit nobis incidunt unde libero aliquam maiores aut ut beatae!",
-      date: "1 Nov 2023",
-    },
-    {
-      name: "John Smith",
-      designation: "Computer Science Student",
-      profileImg: p1,
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, deserunt doloremque? Tenetur modi, aperiam ad magni officia quaerat! Quis possimus odit nobis incidunt unde libero aliquam maiores aut ut beatae!",
-      date: "1 Nov 2023",
-    },
-    {
-      name: "John Smith",
-      designation: "Computer Science Student",
-      profileImg: p1,
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, deserunt doloremque? Tenetur modi, aperiam ad magni officia quaerat! Quis possimus odit nobis incidunt unde libero aliquam maiores aut ut beatae!",
-      date: "1 Nov 2023",
-    },
-    {
-      name: "John Smith",
-      designation: "Computer Science Student",
-      profileImg: p1,
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, deserunt doloremque? Tenetur modi, aperiam ad magni officia quaerat! Quis possimus odit nobis incidunt unde libero aliquam maiores aut ut beatae!",
-      date: "1 Nov 2023",
-    },
-    {
-      name: "John Smith",
-      designation: "Computer Science Student",
-      profileImg: p1,
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, deserunt doloremque? Tenetur modi, aperiam ad magni officia quaerat! Quis possimus odit nobis incidunt unde libero aliquam maiores aut ut beatae!",
-      date: "1 Nov 2023",
-    },
-  ]);
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+
+  const [forumDetails, setForumDetails] = useState<any>(null);
+
+  const [replyList, setReplyList] = useState<Array<any>>([]);
+
+  const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    const forumObj = searchParams.get("forum");
+    if (forumObj) {
+      const f = JSON.parse(forumObj);
+      console.log(f);
+
+      const forum = forumData?.find((d: any) => d?.id === f?.id);
+
+      setForumDetails({
+        code: forum?.code,
+        img: forum?.img,
+        title: forum?.title,
+        description: forum?.description,
+        status: "active",
+        createdDate: dayjs(new Date(forum?.date ?? "")).format("DD/MM/YYYY"),
+        createdBy: userData?.find((d: any) => d?.id === forum?.createdUserId)
+          ?.username,
+      });
+      setReplyList(
+        forum?.replies?.map((d: any) => {
+          const usr = userData?.find((dta: any) => dta?.id === d?.userId);
+          console.log("usr", usr);
+          return {
+            name: usr?.name,
+            designation: usr?.designation,
+            profileImg: usr?.profileImg,
+            message: d?.reply,
+            date: dayjs(new Date(d?.postedDate)).format("DD/MM/YYYY"),
+          };
+        }) ?? []
+      );
+    }
+  }, [location]);
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -74,7 +81,14 @@ export const ViewForum = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const onResetClick = () => {};
+  const onResetClick = () => {
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      setShowBackdrop(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  };
 
   const { register, watch, handleSubmit, setValue, reset, control } = useForm(
     {}
@@ -92,109 +106,121 @@ export const ViewForum = () => {
       });
       return newArr;
     });
+    scrollToBottom();
   };
 
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (boxRef.current) {
+      boxRef.current.scrollTop = boxRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
   return (
-    <Box sx={{ position: "relative" }}>
-      <img
-        src={bg}
-        alt=""
-        style={{
-          //   position: "absolute",
-          width: "100%",
-          height: "150px",
-          borderRadius: "10px",
-          objectFit: "cover",
-          zIndex: -1,
-        }}
-      />
-      <Box
-        sx={{
-          mt: -7,
-          zIndex: 5,
-          p: 3,
-          backgroundColor: "#fff",
-          position: "absolute",
-          left: 0,
-          right: 0,
-          mx: 2,
-          borderRadius: "10px",
-          boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-        }}
-      >
-        <Stack
-          direction={"row"}
-          justifyContent={"space-between"}
-          useFlexGap
-          gap={2}
-          flexWrap={"wrap"}
+    <>
+      <CustomBackdrop open={showBackdrop} />
+      <Box sx={{ position: "relative" }}>
+        <img
+          src={forumDetails?.img}
+          alt=""
+          style={{
+            //   position: "absolute",
+            width: "100%",
+            height: "150px",
+            borderRadius: "10px",
+            objectFit: "cover",
+            zIndex: -1,
+            filter: "brightness(80%)",
+          }}
+        />
+        <Box
+          sx={{
+            mt: -7,
+            zIndex: 5,
+            p: 3,
+            backgroundColor: "#fff",
+            position: "absolute",
+            left: 0,
+            right: 0,
+            mx: 2,
+            borderRadius: "10px",
+            boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+          }}
         >
-          <Box>
-            <Stack direction={"row"} gap={1} useFlexGap alignItems={"center"}>
-              <CardHeading text={"F1001 - Database Management Systems"} />
-              <CustomChip label={"Active"} type="success" />
-            </Stack>
-            <Typography>Created On 1 Nov 2023 by @JohnSmith</Typography>
-          </Box>
-          <Chip
-            icon={<RefreshRoundedIcon />}
-            label="Refresh"
-            onClick={onResetClick}
-          />
-        </Stack>
-        <Typography mt={2}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Error tempora
-          harum impedit maiores ea fugit officiis voluptas, assumenda in ab
-          molestias minus illo dolor nulla blanditiis nostrum magnam quibusdam
-          sapiente?
-        </Typography>
-        <Divider className={"custom-divider-dark"} sx={{ my: 3 }} />
-        <Box sx={{ height: "500px", overflow: "auto" }}>
-          <Stack gap={2} useFlexGap direction={"column"}>
-            {replyList?.map((reply: any, index) => (
-              //   <Grow
-              //     key={index}
-              //     in={isVisible}
-              //     style={{ transformOrigin: "0 0 0" }}
-              //     {...(isVisible ? { timeout: 500 } : {})}
-              //   >
-              <MessageView
-                key={index}
-                profileImg={reply?.profileImg}
-                name={reply?.name}
-                description={reply?.message}
-                date={reply?.date}
-                designation={reply?.designation}
-              />
-              //   </Grow>
-            ))}
-          </Stack>
-        </Box>
-        <Grid container spacing={2} my={3}>
-          <Grid item xs={12} sm={12} md={12} container gap={2}>
-            <FormTextField
-              register={register("message")}
-              label={"Type a Reply"}
-              placeholder="Type a reply..."
-              multiline
-            />
-          </Grid>
-          <Grid
-            container
-            justifyContent={"flex-end"}
-            item
-            xs={12}
-            sm={12}
-            md={12}
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            useFlexGap
+            gap={2}
+            flexWrap={"wrap"}
           >
-            <PrimaryButton
-              text={"Send"}
-              startIcon={<SendRoundedIcon />}
-              onClick={handleSubmit(handleSendMessage)}
+            <Box>
+              <Stack direction={"row"} gap={1} useFlexGap alignItems={"center"}>
+                <CardHeading
+                  text={`${forumDetails?.code} - ${forumDetails?.title}`}
+                />
+                <CustomChip label={"Active"} type="success" />
+              </Stack>
+              <Typography>
+                Created {forumDetails?.createdDate} by @
+                {forumDetails?.createdBy}
+              </Typography>
+            </Box>
+            <Chip
+              icon={<RefreshRoundedIcon />}
+              label="Refresh"
+              onClick={onResetClick}
             />
+          </Stack>
+          <Typography mt={2}>{forumDetails?.description}</Typography>
+          <Divider className={"custom-divider-dark"} sx={{ my: 3 }} />
+          <Box ref={boxRef} sx={{ height: "500px", overflow: "auto" }}>
+            <TransitionGroup>
+              {replyList?.map((reply: any, index) => (
+                <Collapse>
+                  <MessageView
+                    key={index}
+                    profileImg={reply?.profileImg}
+                    name={reply?.name}
+                    description={reply?.message}
+                    date={reply?.date}
+                    designation={reply?.designation}
+                  />
+                </Collapse>
+              ))}
+            </TransitionGroup>
+          </Box>
+          <Grid container spacing={2} my={3}>
+            <Grid item xs={12} sm={12} md={12} container gap={2}>
+              <FormTextField
+                register={register("message")}
+                label={"Type a Reply"}
+                placeholder="Type a reply..."
+                multiline
+              />
+            </Grid>
+            <Grid
+              container
+              justifyContent={"flex-end"}
+              item
+              xs={12}
+              sm={12}
+              md={12}
+            >
+              <PrimaryButton
+                text={"Send"}
+                startIcon={<SendRoundedIcon />}
+                onClick={handleSubmit(handleSendMessage)}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };

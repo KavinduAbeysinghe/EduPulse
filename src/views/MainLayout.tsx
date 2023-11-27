@@ -18,7 +18,7 @@ export const MainLayout = () => {
 };
 
 const Layout = () => {
-  const drawerWidth = 210;
+  // const drawerWidth = 210;
 
   return (
     <Box display={"flex"} sx={{ backgroundColor: "rgb(240, 242, 245)" }}>

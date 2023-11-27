@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CreateModule } from "./CreateModule";
 import { ModuleContent } from "./ModuleContent";
+import { useLocation } from "react-router-dom";
+import { useLayoutEffect, useState } from "react";
 
 const steps = [
   {
@@ -111,7 +113,7 @@ export default function HorizontalNonLinearStepper() {
               <Button onClick={handleNext} sx={{ mr: 1 }}>
                 Next
               </Button>
-              {activeStep !== steps.length &&
+              {/* {activeStep !== steps.length &&
                 (completed[activeStep] ? (
                   <Typography
                     variant="caption"
@@ -125,7 +127,7 @@ export default function HorizontalNonLinearStepper() {
                       ? "Finish"
                       : "Complete Step"}
                   </Button>
-                ))}
+                ))} */}
             </Box>
           </React.Fragment>
         )}

@@ -18,64 +18,20 @@ import p5 from "../../assets/images/person7.jpg";
 import { SearchField } from "../inputs/SearchField";
 import { InnerModal } from "../modals/CustomModal";
 import { StartDiscussionForum } from "./StartDiscussionForum";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CardHeading } from "../common/CardHeading";
+import { forumData } from "../../util";
 
 export const SearchForums = () => {
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  const [otherForumData, setForumData] = useState<Array<any>>(forumData);
 
-  const forumsData = [
-    {
-      id: 1,
-      title: "Introduction to Programming",
-      description:
-        "Discuss the fundamentals of programming languages, share tips, and ask questions related to coding basics.",
-      date: "2023-01-15",
-      people: [p1, p2, p3, p4, p5],
-      code: "F1001",
-      img: bg1,
-    },
-    {
-      id: 2,
-      title: "Mathematics for Machine Learning",
-      description:
-        "Explore mathematical concepts crucial for understanding machine learning algorithms. Dive into discussions on linear algebra, calculus, and statistics.",
-      date: "2023-02-05",
-      people: [p1, p2, p3, p4, p5],
-      code: "F1001",
-      img: bg2,
-    },
-    {
-      id: 3,
-      title: "Web Development Bootcamp",
-      description:
-        "Join the conversation on web development technologies, frameworks, and best practices. Share your projects and seek feedback from the community.",
-      date: "2023-03-10",
-      people: [p1, p2, p3, p4, p5],
-      code: "F1001",
-      img: bg3,
-    },
-    {
-      id: 4,
-      title: "Artificial Intelligence Ethics",
-      description:
-        "Delve into the ethical considerations surrounding artificial intelligence. Discuss responsible AI development, bias, and the societal impact of AI.",
-      date: "2023-04-02",
-      people: [p1, p2, p3, p4, p5],
-      code: "F1001",
-      img: bg4,
-    },
-    {
-      id: 5,
-      title: "Data Science Challenges",
-      description:
-        "Share your experiences tackling real-world data science challenges. Discuss data cleaning, feature engineering, and model evaluation strategies.",
-      date: "2023-05-20",
-      people: [p1, p2, p3, p4, p5],
-      code: "F1001",
-      img: bg5,
-    },
+  const [myForumData, setMyForumData] = useState<Array<any>>([
     {
       id: 6,
       title: "Cybersecurity Awareness",
@@ -106,14 +62,18 @@ export const SearchForums = () => {
       code: "F1001",
       img: bg3,
     },
-  ];
+  ]);
+
+  const navigate = useNavigate();
 
   const handleStartDiscuss = () => {
     setShowModal(true);
   };
 
-  const handleNavigateViewDiss = () => {
-    navigate("/control/discussions-and-forums/view");
+  const handleNavigateViewDiss = (id: any) => {
+    const forum = { id: id };
+    searchParams.set("forum", JSON.stringify(forum));
+    navigate(`/control/discussions-and-forums/view?${searchParams}`);
   };
 
   return (
@@ -123,9 +83,14 @@ export const SearchForums = () => {
         setOpen={setShowModal}
         maxWidth={"sm"}
         title={"Start a Discussion"}
-        body={<StartDiscussionForum />}
+        body={
+          <StartDiscussionForum
+            setMyForums={setMyForumData}
+            setOpen={setShowModal}
+          />
+        }
       />
-      <Grid container rowSpacing={7} columnSpacing={2}>
+      <Grid container rowSpacing={4} columnSpacing={7}>
         <Grid item md={12}>
           <BgCard color={"#26588b"} onClick={handleNavigateViewDiss}>
             <Typography color={"#fff"} mb={2} textAlign={"justify"}>
@@ -143,18 +108,56 @@ export const SearchForums = () => {
             </Stack>
           </BgCard>
         </Grid>
-        {forumsData?.map((d: any) => (
-          <Grid item xs={12} sm={6} md={3} key={d?.id}>
-            <ForumCard
-              img={d?.img}
-              title={`${d?.code} - ${d?.title}`}
-              date={d?.date}
-              action={handleNavigateViewDiss}
-              people={d?.people}
-              description={d?.description}
-            />
+        <Grid
+          item
+          container
+          rowSpacing={7}
+          columnSpacing={2}
+          xs={12}
+          sm={12}
+          md={12}
+        >
+          <Grid item md={12} sm={12} xs={12}>
+            <CardHeading text={"My Forums"} />
           </Grid>
-        ))}
+          {myForumData?.map((d: any) => (
+            <Grid item xs={12} sm={12} md={3} key={d?.id}>
+              <ForumCard
+                img={d?.img}
+                title={`${d?.code} - ${d?.title}`}
+                date={d?.date}
+                action={() => handleNavigateViewDiss(d?.id)}
+                people={d?.people}
+                description={d?.description}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <Grid
+          item
+          container
+          xs={12}
+          sm={12}
+          md={12}
+          rowSpacing={7}
+          columnSpacing={2}
+        >
+          <Grid item md={12} sm={12} xs={12}>
+            <CardHeading text={"Other Forums"} />
+          </Grid>
+          {otherForumData?.map((d: any) => (
+            <Grid item xs={12} sm={12} md={3} key={d?.id}>
+              <ForumCard
+                img={d?.img}
+                title={`${d?.code} - ${d?.title}`}
+                date={d?.date}
+                action={() => handleNavigateViewDiss(d?.id)}
+                people={d?.people}
+                description={d?.description}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </>
   );

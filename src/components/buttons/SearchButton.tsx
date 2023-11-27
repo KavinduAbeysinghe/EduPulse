@@ -1,11 +1,21 @@
-import { IconButton, IconButtonProps } from "@mui/material";
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  IconButtonProps,
+} from "@mui/material";
 import React from "react";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { extend } from "dayjs";
 
-export const SearchButton = ({ onClick }: IconButtonProps) => {
+interface SearchButtonProps {
+  action: any;
+}
+
+export const SearchButton = ({ action, ...rest }: SearchButtonProps | any) => {
   return (
-    <IconButton onClick={onClick}>
+    <Button onClick={action} variant="outlined" {...rest}>
       <SearchRoundedIcon />
-    </IconButton>
+    </Button>
   );
 };

@@ -1,7 +1,15 @@
 import { faEye, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import SearchTable from "../../components/tables/SearchTable";
 import { faEllipsis, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Box, Chip, Grid, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { FormTextField } from "../../components/inputs/FormTextField";
 import { FormButton } from "../../components/buttons/FormButton";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
@@ -15,6 +23,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { useLocation, useNavigate } from "react-router-dom";
+import { SearchButton } from "../../components/buttons/SearchButton";
+import { courseData } from "../../util";
 
 export const SearchCourse = () => {
   const location = useLocation();
@@ -30,44 +40,6 @@ export const SearchCourse = () => {
     "Course Name",
     "Course Description",
     "Course Status",
-  ];
-
-  const courseData = [
-    {
-      id: 1,
-      code: "C-1001",
-      name: "Database Management Systems 1",
-      description: "Database Management Systems 1",
-      status: "active",
-    },
-    {
-      id: 2,
-      code: "C-1002",
-      name: "Database Management Systems 2",
-      description: "Database Management Systems 2",
-      status: "active",
-    },
-    {
-      id: 3,
-      code: "C-1003",
-      name: "Database Management Systems 3",
-      description: "Database Management Systems 3",
-      status: "active",
-    },
-    {
-      id: 4,
-      code: "C-1004",
-      name: "Database Management Systems 4",
-      description: "Database Management Systems 4",
-      status: "active",
-    },
-    {
-      id: 5,
-      code: "C-1005",
-      name: "Database Management Systems 5",
-      description: "Database Management Systems 5",
-      status: "active",
-    },
   ];
 
   const formatData = (data: Array<any>) => {
@@ -131,8 +103,14 @@ export const SearchCourse = () => {
   };
 
   const resetSearch = () => {
-    reset(defaultValues);
-    setTableData(formatData(courseData));
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      reset(defaultValues);
+      setTableData(formatData(courseData));
+      setShowBackdrop(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   };
 
   const handleCreate = () => {
@@ -169,38 +147,42 @@ export const SearchCourse = () => {
           </Stack>
 
           <Grid container spacing={2} mb={3} mt={1}>
-            <Grid item md={5.5}>
+            <Grid item xs={12} sm={12} md={6}>
               <FormTextField
                 placeholder="Search by course name"
                 register={register("courseName")}
                 label={"Course Name"}
               />
             </Grid>
-            <Grid item md={5.5}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              display={"flex"}
+              gap={2}
+              // alignItems={"center"}
+            >
               <FormTextField
                 placeholder="Search by course description"
                 register={register("courseDescription")}
                 label={"Course Description"}
               />
-            </Grid>
-            <Grid item md={1}>
-              <IconButton onClick={handleSubmit(handleSearch)}>
-                <SearchRoundedIcon />
-              </IconButton>
+              <SearchButton action={handleSubmit(handleSearch)} />
             </Grid>
             {/* <Grid item md={3} display={"flex"} gap={1} alignItems={"center"}>
           <FormButton text={"Search"} variant={"contained"} />
           <FormButton text={"Clear"} variant={"outlined"} />
         </Grid> */}
           </Grid>
+          <SearchTable
+            tableData={tableData}
+            tableHeaders={coursesTableHeads}
+            id={"id"}
+            paginate={true}
+            actionButtons={actionButtons}
+          />
         </Box>
-        <SearchTable
-          tableData={tableData}
-          tableHeaders={coursesTableHeads}
-          id={"id"}
-          paginate={true}
-          actionButtons={actionButtons}
-        />
       </Box>
     </>
   );

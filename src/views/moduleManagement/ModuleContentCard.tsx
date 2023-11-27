@@ -13,6 +13,7 @@ export const ModuleContentCard: React.FC<any> = ({
   onAddClick,
   children,
   height,
+  isDisabled,
 }: any) => {
   return (
     <Box className={"basic-card"} px={3} height={"100%"}>
@@ -22,7 +23,7 @@ export const ModuleContentCard: React.FC<any> = ({
         alignItems={"center"}
       >
         <CardHeading text={header} />
-        <PrimaryButton text={"+ Add"} onClick={onAddClick} />
+        {!isDisabled && <PrimaryButton text={"+ Add"} onClick={onAddClick} />}
       </Stack>
       <Box mt={3}>{children}</Box>
     </Box>

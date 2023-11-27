@@ -101,6 +101,7 @@ export const FormAutocomplete = ({
               }}
               renderInput={(params) => (
                 <TextField
+                  required={required}
                   error={error}
                   label={label}
                   {...params}
