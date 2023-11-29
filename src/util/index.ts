@@ -12,7 +12,7 @@ import b3 from "../assets/images/bgimg3.jpg";
 import b4 from "../assets/images/bgimg4.jpg";
 import b5 from "../assets/images/bgimg5.jpg";
 
-const roles = ["STAFF", "STUDENT"];
+const roles = ["STAFF", "STUDENT", "ADMIN"];
 
 export const users = [
   {
@@ -23,7 +23,7 @@ export const users = [
     profileImg: p1,
     status: "active",
     name: "Jane Allen",
-    role: "",
+    role: ["STUDENT"],
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ export const users = [
     profileImg: p2,
     status: "active",
     name: "John Doe",
-    role: "",
+    role: ["STAFF"],
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ export const users = [
     profileImg: p3,
     status: "inactive",
     name: "Emily Smith",
-    role: "",
+    role: ["ADMIN"],
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ export const users = [
     profileImg: p4,
     status: "active",
     name: "Alex Cooper",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 5,
@@ -63,7 +63,7 @@ export const users = [
     profileImg: p5,
     status: "active",
     name: "Sophia Wang",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 6,
@@ -73,7 +73,7 @@ export const users = [
     profileImg: p7,
     status: "active",
     name: "Chris Jackson",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 1,
@@ -83,7 +83,7 @@ export const users = [
     password: "12345",
     profileImg: p1,
     status: "active",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 2,
@@ -93,7 +93,7 @@ export const users = [
     password: "12345",
     profileImg: p1,
     status: "active",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 3,
@@ -103,7 +103,7 @@ export const users = [
     password: "12345",
     profileImg: p1,
     status: "active",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 4,
@@ -113,7 +113,7 @@ export const users = [
     password: "12345",
     profileImg: p1,
     status: "active",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
   {
     id: 5,
@@ -123,7 +123,7 @@ export const users = [
     password: "12345",
     profileImg: p1,
     status: "active",
-    role: "",
+    role: ["STAFF", "STUDENT", "ADMIN"],
   },
 ];
 

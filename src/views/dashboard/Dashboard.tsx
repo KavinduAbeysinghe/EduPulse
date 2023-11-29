@@ -300,8 +300,8 @@ export const Dashboard = () => {
                     <SearchField />
                   </Stack>
                   <Grid container spacing={2} mt={1}>
-                    {activityCardData?.map((d: any) => (
-                      <Grid key={d?.tag} item xs={12} sm={12} md={4}>
+                    {activityCardData?.map((d: any, index) => (
+                      <Grid key={index} item xs={12} sm={12} md={4}>
                         <ActivityCard
                           tag={d?.tag}
                           value={d?.value}

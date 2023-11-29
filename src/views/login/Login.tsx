@@ -19,10 +19,11 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
 import { users } from "../../util";
 import { useNotification } from "../../contexts/NotificationContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Login = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
@@ -32,6 +33,12 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const notify = useNotification();
+
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/control/dashboard";
+
+  const { setAuthContext } = useAuthContext();
 
   const handlePasswordToggle = () => {
     setShowPassword((prev) => !prev);
@@ -58,7 +65,13 @@ export const Login = () => {
           d?.username === data?.username && d?.password === data?.password
       );
       if (user) {
-        navigate("/control/dashboard");
+        setAuthContext((prevState: any) => ({
+          ...prevState,
+          isLoggedIn: true,
+          roles: user?.role,
+          userId: user?.id,
+        }));
+        navigate(from, { replace: true });
       } else {
         notify.error("Invalid Credentials");
       }

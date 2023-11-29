@@ -7,21 +7,24 @@ import { CourseManagement } from "./courseManagement/CourseManagement";
 import { ModuleManagement } from "./moduleManagement/ModuleManagement";
 import { UserManagement } from "./userManagement/UserManagement";
 import { ForumManagement } from "../components/forums/ForumManagement";
-import { AuthenticationContextProvider } from "../contexts/AuthenticationContext";
+import { AuthContextProvider, useAuthContext } from "../contexts/AuthContext";
+import { ProtectedRoute } from "./common/ProtectedRoute";
+import { Unauthorized } from "./common/Unauthorized";
 
 export const MainLayout = () => {
   return (
-    <AuthenticationContextProvider>
-      <Routes>
-        <Route element={<Login />} path="/" />
-        <Route element={<Layout />} path="/control/*" />
-      </Routes>
-    </AuthenticationContextProvider>
+    <Routes>
+      <Route element={<Login />} path="/" />
+      <Route element={<Layout />} path="/control/*" />
+      <Route element={<Unauthorized />} path="/unauthorized" />
+    </Routes>
   );
 };
 
 const Layout = () => {
   // const drawerWidth = 210;
+
+  const { authContext } = useAuthContext();
 
   return (
     <Box display={"flex"} sx={{ backgroundColor: "rgb(240, 242, 245)" }}>
@@ -40,14 +43,64 @@ const Layout = () => {
         }}
       >
         <Routes>
-          <Route element={<Dashboard />} path="/dashboard" />
-          <Route element={<CourseManagement />} path="/course-management/*" />
-          <Route element={<ModuleManagement />} path="/module-management/*" />
-          <Route element={<UserManagement />} path="/user-management/*" />
           <Route
-            element={<ForumManagement />}
-            path="/discussions-and-forums/*"
-          />
+            element={
+              <ProtectedRoute
+                roles={["STAFF", "ADMIN", "STUDENT"]}
+                userRoles={authContext?.roles}
+                isLoggedIn={authContext?.isLoggedIn}
+              />
+            }
+          >
+            <Route element={<Dashboard />} path="/dashboard" />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                roles={["STAFF", "ADMIN", "STUDENT"]}
+                userRoles={authContext?.roles}
+                isLoggedIn={authContext?.isLoggedIn}
+              />
+            }
+          >
+            <Route element={<CourseManagement />} path="/course-management/*" />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                roles={["STAFF"]}
+                userRoles={authContext?.roles}
+                isLoggedIn={authContext?.isLoggedIn}
+              />
+            }
+          >
+            <Route element={<ModuleManagement />} path="/module-management/*" />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                roles={["STAFF", "ADMIN", "STUDENT"]}
+                userRoles={authContext?.roles}
+                isLoggedIn={authContext?.isLoggedIn}
+              />
+            }
+          >
+            <Route element={<UserManagement />} path="/user-management/*" />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                roles={["STAFF", "ADMIN", "STUDENT"]}
+                userRoles={authContext?.roles}
+                isLoggedIn={authContext?.isLoggedIn}
+              />
+            }
+          >
+            <Route
+              element={<ForumManagement />}
+              path="/discussions-and-forums/*"
+            />
+          </Route>
         </Routes>
       </Box>
     </Box>

@@ -20,6 +20,7 @@ import AlertDialogSlide from "../../components/modals/AlertDialog";
 import { courseData, moduleData, userData } from "../../util";
 import { SearchButton } from "../../components/buttons/SearchButton";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
+import dayjs from "dayjs";
 
 export const SearchModules = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
