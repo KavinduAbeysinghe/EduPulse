@@ -21,6 +21,7 @@ import { InnerModal } from "../modals/CustomModal";
 import { DocPreviewModal } from "../modals/DocPreviewModal";
 import { useState } from "react";
 import { QuizModal } from "../modals/QuizModal";
+import { string } from "yup";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -91,11 +92,24 @@ export default function CustomizedAccordions({
   };
 
   const handlePreviewFile = (file: any) => {
-    setDocDetails({
-      doc: file,
-      docType: "application/pdf",
-      docTitle: "Sample.pdf",
-    });
+    console.log(typeof file);
+    if (typeof file === "string") {
+      setDocDetails({
+        doc: file,
+        docType: "application/pdf",
+        docTitle: "Sample.pdf",
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        setDocDetails({
+          doc: e.target.result,
+          docType: file.type,
+          docTitle: file.name,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
     setShowModal(true);
   };
 

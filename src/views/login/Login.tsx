@@ -21,6 +21,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
+import { users } from "../../util";
+import { useNotification } from "../../contexts/NotificationContext";
 
 export const Login = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
@@ -28,6 +30,8 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const notify = useNotification();
 
   const handlePasswordToggle = () => {
     setShowPassword((prev) => !prev);
@@ -49,17 +53,24 @@ export const Login = () => {
   const onSubmit = (data: any) => {
     setShowBackdrop(true);
     setTimeout(() => {
-      console.log(data);
-      navigate("/control/course-management");
+      const user = users?.find(
+        (d: any) =>
+          d?.username === data?.username && d?.password === data?.password
+      );
+      if (user) {
+        navigate("/control/dashboard");
+      } else {
+        notify.error("Invalid Credentials");
+      }
       setShowBackdrop(false);
     }, 1000);
   };
 
-  const textsArr = [
-    "Sign in to Edu Pulse and embark on a seamless learning adventure.",
-    "Unlock a world of knowledge with our intuitive learning management system.",
-    "Dive into engaging courses, track your progress, and elevate your education experience.",
-  ];
+  // const textsArr = [
+  //   "Sign in to Edu Pulse and embark on a seamless learning adventure.",
+  //   // "Unlock a world of knowledge with our intuitive learning management system.",
+  //   // "Dive into engaging courses, track your progress, and elevate your education experience.",
+  // ];
 
   const theme = createTheme({
     palette: {
@@ -94,31 +105,12 @@ export const Login = () => {
               }}
             />
             <Box p={10} position={"absolute"} top={0} zIndex={2}>
-              {/* <img src={logo} alt="app logo" height={120} /> */}
-
               <Typography variant="h2" mt={3} color={"#eee"}>
                 Edu Pulse
               </Typography>
               <Typography mt={1} color={"#eee"}>
                 Your Learning Partner
               </Typography>
-              {textsArr?.map((d: string, index) => (
-                <Typography
-                  key={index}
-                  color={"#000"}
-                  className="login-form"
-                  p={3}
-                  mt={5}
-                  sx={{
-                    display: "inline-block",
-                    borderTopRightRadius: "1000px",
-                    borderBottomRightRadius: "1000px",
-                    borderBottomLeftRadius: "1000px",
-                  }}
-                >
-                  {d}
-                </Typography>
-              ))}
             </Box>
           </Grid>
           <Grid item my={3} pr={3} xs={12} sm={6} md={5}>
@@ -136,7 +128,11 @@ export const Login = () => {
                 direction={"column"}
                 justifyContent={"center"}
               >
-                <Typography fontWeight={700} variant="h5">
+                <Typography
+                  color={"text.primary"}
+                  fontWeight={700}
+                  variant="h5"
+                >
                   Welcome Back
                 </Typography>
                 <Typography color={"text.secondary"} mb={5}>

@@ -404,13 +404,13 @@ export const Dashboard = () => {
                     />
                     <Box>
                       <Typography variant="h6">Steph Williams</Typography>
-                      <Typography color={"text.secondary"}>
+                      <Typography fontSize={"small"} color={"text.secondary"}>
                         Computer Science Student
                       </Typography>
-                      <Typography color={"text.secondary"}>
+                      <Typography fontSize={"small"} color={"text.secondary"}>
                         University of Westminster
                       </Typography>
-                      <Typography color={"text.secondary"}>
+                      <Typography fontSize={"small"} color={"text.secondary"}>
                         Stu No: E110110110
                       </Typography>
                     </Box>

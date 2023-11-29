@@ -7,13 +7,16 @@ import { CourseManagement } from "./courseManagement/CourseManagement";
 import { ModuleManagement } from "./moduleManagement/ModuleManagement";
 import { UserManagement } from "./userManagement/UserManagement";
 import { ForumManagement } from "../components/forums/ForumManagement";
+import { AuthenticationContextProvider } from "../contexts/AuthenticationContext";
 
 export const MainLayout = () => {
   return (
-    <Routes>
-      <Route element={<Login />} path="/" />
-      <Route element={<Layout />} path="/control/*" />
-    </Routes>
+    <AuthenticationContextProvider>
+      <Routes>
+        <Route element={<Login />} path="/" />
+        <Route element={<Layout />} path="/control/*" />
+      </Routes>
+    </AuthenticationContextProvider>
   );
 };
 

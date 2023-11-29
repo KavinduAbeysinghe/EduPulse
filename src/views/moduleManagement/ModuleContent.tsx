@@ -50,11 +50,13 @@ export const ModuleContent = () => {
   const defaultValues = {
     moduleMaterials: [],
     quizes: [],
+    assignments: [],
   };
 
   const validationSchema = Yup.object().shape({
     moduleMaterials: Yup.array(),
     quizes: Yup.array(),
+    assignments: Yup.array(),
   });
 
   const { control, setValue } = useForm({
@@ -72,6 +74,15 @@ export const ModuleContent = () => {
   });
 
   const {
+    fields: assignmentsFields,
+    remove: removeAssignmentsFields,
+    append: appendAssignmentsFields,
+  } = useFieldArray({
+    control,
+    name: "assignments",
+  });
+
+  const {
     fields: quizFields,
     remove: removeQuiz,
     append: appendQuiz,
@@ -81,9 +92,14 @@ export const ModuleContent = () => {
   });
 
   useEffect(() => {
-    setValue("moduleMaterials", moduleMaterials);
-    setValue("quizes", quizData);
-  }, [moduleMaterials, quizData]);
+    if (page === "view" || page === "edit") {
+      setValue("moduleMaterials", moduleMaterials);
+      setValue("quizes", quizData);
+    } else {
+      setValue("moduleMaterials", []);
+      setValue("quizes", []);
+    }
+  }, [moduleMaterials, quizData, page]);
 
   const setModuleMaterialModalDetails = () => {
     setModalDetails({
@@ -108,11 +124,43 @@ export const ModuleContent = () => {
     setShowModal(true);
   };
 
+  const setAssignmentsModalDetails = () => {
+    setModalDetails({
+      maxWidth: "sm",
+      title: "Add Assignments",
+      body: (
+        <AddModuleMaterial
+          moduleMaterials={assignmentsFields}
+          appendModuleMaterials={appendAssignmentsFields}
+          sectionList={assignmentsFields?.map((m: any) => ({
+            label: m?.title,
+            value: m?.id,
+          }))}
+        />
+      ),
+    });
+  };
+
+  const openAssignmentsModal = () => {
+    setModal("assignments");
+    setAssignmentsModalDetails();
+    setShowModal(true);
+  };
+
   const setQuizModalDetails = () => {
     setModalDetails({
       maxWidth: "lg",
       title: "Add Quiz",
-      body: <AddQuiz appendQuiz={appendQuiz} quizes={quizFields} />,
+      body: (
+        <AddQuiz
+          appendQuiz={appendQuiz}
+          quizes={quizFields}
+          sectionList={quizFields?.map((m: any) => ({
+            label: m?.title,
+            value: m?.ID,
+          }))}
+        />
+      ),
     });
   };
 
@@ -133,8 +181,10 @@ export const ModuleContent = () => {
       setModuleMaterialModalDetails();
     } else if (modal === "quiz") {
       setQuizModalDetails();
+    } else if (modal === "assignments") {
+      setAssignmentsModalDetails();
     }
-  }, [modal, moduleMaterialsFields]);
+  }, [modal, moduleMaterialsFields, page, quizFields, assignmentsFields]);
 
   return (
     <>
@@ -165,10 +215,14 @@ export const ModuleContent = () => {
         <Grid item xs={12} sm={12} md={12}>
           <ModuleContentCard
             header={"Assignments"}
-            onAddClick={() => {}}
+            onAddClick={openAssignmentsModal}
             isDisabled={page === "view"}
           >
-            <CustomizedAccordions data={moduleMaterials} isQuiz={false} />
+            {assignmentsFields.length ? (
+              <CustomizedAccordions data={assignmentsFields} isQuiz={false} />
+            ) : (
+              <Typography>No Assigments Available</Typography>
+            )}
           </ModuleContentCard>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -177,7 +231,11 @@ export const ModuleContent = () => {
             onAddClick={openQuizModal}
             isDisabled={page === "view"}
           >
-            <CustomizedAccordions data={quizFields} isQuiz={true} />
+            {quizFields.length ? (
+              <CustomizedAccordions data={quizFields} isQuiz={true} />
+            ) : (
+              <Typography>No Quizes Available</Typography>
+            )}
           </ModuleContentCard>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
 import { Box, Chip, Grid, IconButton, Stack, Typography } from "@mui/material";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
 import { useForm } from "react-hook-form";
 import { FormDropdown } from "../../components/dropdowns/FormDropdown";
@@ -17,10 +17,48 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import AlertDialogSlide from "../../components/modals/AlertDialog";
-import { moduleData, userData } from "../../util";
+import { courseData, moduleData, userData } from "../../util";
+import { SearchButton } from "../../components/buttons/SearchButton";
+import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 
 export const SearchModules = () => {
+  const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
+
   const [openAlert, setOpenAlert] = useState<boolean>(false);
+
+  const [courseList, setCourseList] = useState<Array<any>>([]);
+
+  const [moduleList, setModuleList] = useState<Array<any>>([]);
+
+  const [leadList, setLeadList] = useState<Array<any>>([]);
+
+  useLayoutEffect(() => {
+    setCourseList(
+      courseData?.map((d: any) => ({
+        label: `${d?.code} - ${d?.name}`,
+        value: d?.id,
+      }))
+    );
+  }, []);
+
+  const { register, watch, handleSubmit, setValue, reset, control } = useForm(
+    {}
+  );
+
+  const courseId = watch("courseId");
+
+  useEffect(() => {
+    if (courseId) {
+      setModuleList(
+        moduleData
+          ?.filter((data: any) => data?.courseId === courseId)
+          ?.map((d: any) => ({
+            label: `${d?.code} - ${d?.title}`,
+            value: d?.id,
+          }))
+      );
+    }
+  }, [courseId]);
 
   const tableHeads = [
     "Module Code",
@@ -39,11 +77,14 @@ export const SearchModules = () => {
 
   const searchParams = new URLSearchParams(location.search);
 
-  const { register, watch, handleSubmit, setValue, reset, control } = useForm(
-    {}
-  );
-
-  const resetSearch = () => {};
+  const resetSearch = () => {
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      setModuleTableData(formatData(moduleData));
+      setShowBackdrop(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  };
 
   const handleCreate = () => {
     navigate("/control/module-management/create-module");
@@ -82,6 +123,7 @@ export const SearchModules = () => {
 
   useLayoutEffect(() => {
     setModuleTableData(formatData(moduleData));
+    setLeadList(userData?.map((d: any) => ({ label: d?.name, value: d?.id })));
   }, []);
 
   const handleNavigateView = (id: any) => {
@@ -104,8 +146,47 @@ export const SearchModules = () => {
     { tooltip: "Delete", icon: faTrash, handleClick: handleDelete },
   ];
 
+  const getYearsList = () =>
+    useMemo(() => {
+      let arr = [];
+      for (let i = 2023 - 5; i <= 2023; i++) {
+        arr.push({ label: i, value: i });
+      }
+      return arr;
+    }, []);
+
+  useEffect(() => {
+    if (!courseId) {
+      setValue("moduleName", "");
+      setValue("moduleLead", "");
+      setValue("year", "");
+    }
+  }, [courseId]);
+
+  const onSearch = (data: any) => {
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      const filteredArr = moduleData?.filter((item) => {
+        const courseMatch = data?.courseId
+          ? data?.courseId === item?.courseId
+          : true;
+        const moduleMatch = data?.moduleName
+          ? data?.moduleName === item?.id
+          : true;
+        const leadMatch = data?.moduleLead
+          ? data?.moduleLead === item?.lead
+          : true;
+        return courseMatch && moduleMatch && leadMatch;
+      });
+      setModuleTableData(formatData(filteredArr));
+      setShowBackdrop(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  };
+
   return (
     <>
+      <CustomBackdrop open={showBackdrop} />
       <AlertDialogSlide
         message={"Do you want to remove this module?"}
         handleYesClick={() => {}}
@@ -134,16 +215,13 @@ export const SearchModules = () => {
             </Stack>
             <Grid container mt={1} spacing={2}>
               <Grid item xs={12} sm={12} md={12}>
-                <Typography fontSize={"small"} color={"text.secondary"} mb={1}>
-                  Select the course first *
-                </Typography>
                 <FormAutocomplete
                   error={false}
                   helperText={""}
                   setValue={setValue}
                   label={"Course"}
-                  options={[]}
-                  id={""}
+                  options={courseList}
+                  id={"courseId"}
                   required={false}
                   disabled={false}
                   control={control}
@@ -156,10 +234,10 @@ export const SearchModules = () => {
                   helperText={""}
                   setValue={setValue}
                   label={"Module Name"}
-                  options={[]}
+                  options={moduleList}
                   id={""}
                   required={false}
-                  disabled={false}
+                  disabled={!courseId}
                   control={control}
                   watch={watch}
                 />
@@ -170,28 +248,30 @@ export const SearchModules = () => {
                   helperText={""}
                   setValue={setValue}
                   label={"Module Lead"}
-                  options={[]}
-                  id={""}
+                  options={leadList}
+                  id={"moduleLead"}
                   required={false}
-                  disabled={false}
+                  disabled={!courseId}
                   control={control}
                   watch={watch}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={4} display={"flex"} gap={1}>
+              <Grid item xs={12} sm={12} md={4} display={"flex"} gap={2}>
                 <Box flexGrow={1}>
                   <FormDropdown
                     label={"Year"}
                     name={"year"}
-                    options={[]}
+                    options={getYearsList()}
                     helperText={""}
                     control={control}
                     fullWidth
+                    disabled={!courseId}
                   />
                 </Box>
-                <IconButton onClick={handleSubmit(handleSearch)}>
-                  <SearchRoundedIcon />
-                </IconButton>
+                <SearchButton
+                  sx={{ mb: 0.5 }}
+                  onClick={handleSubmit(onSearch)}
+                />
               </Grid>
               <Grid item xs={12} sm={12} md={12}>
                 <SearchTable

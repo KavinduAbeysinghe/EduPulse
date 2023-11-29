@@ -28,13 +28,15 @@ import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { commonValidationError, quizData } from "../../util";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNotification } from "../../contexts/NotificationContext";
+import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
 
 interface AddQuizProps {
   appendQuiz: any;
   quizes: any;
+  sectionList: Array<any>;
 }
 
-export const AddQuiz = ({ appendQuiz, quizes }: AddQuizProps) => {
+export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
   const notify = useNotification();
 
   const [tempOptions, setTempOptions] = useState<Array<any>>([]);
@@ -61,6 +63,11 @@ export const AddQuiz = ({ appendQuiz, quizes }: AddQuizProps) => {
       .typeError(commonValidationError),
     question: Yup.string(),
     option: Yup.string(),
+    section: Yup.string(),
+    selectSection: Yup.number()
+      .required(commonValidationError)
+      .typeError(commonValidationError),
+    quizTitle: Yup.string().required(commonValidationError),
   });
 
   const {
@@ -167,14 +174,16 @@ export const AddQuiz = ({ appendQuiz, quizes }: AddQuizProps) => {
   };
 
   const handleAddQuiz = (data: any) => {
+    console.log(data);
+
     if (questionsList?.length > 0) {
-      const d = quizes?.find((i: any) => i?.title === "Week 1");
+      const d = quizes?.find((i: any) => i?.ID === data?.selectSection);
       const index = quizes?.indexOf(d);
       d?.data?.push({
         quizId: quizes?.data?.length + 1,
         minutes: data?.minutes,
         seconds: data?.seconds,
-        title: "Quiz 2",
+        title: data?.quizTitle,
         questionData: questionsList,
       });
       quizes[index] = d;
@@ -187,23 +196,69 @@ export const AddQuiz = ({ appendQuiz, quizes }: AddQuizProps) => {
     }
   };
 
+  const sectionName = watch("section");
+
+  const handleAddSection = () => {
+    if (sectionName) {
+      const dupExists = quizes?.find((i: any) => i?.title === sectionName);
+      if (!dupExists) {
+        appendQuiz({
+          ID: quizes.length + 1,
+          title: sectionName,
+          data: [],
+        });
+        notify.success("Section Added Successfully");
+      } else {
+        notify.warn("Already Exists");
+      }
+      setValue("section", "");
+    }
+  };
+
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={12} md={12}>
-        <Typography fontWeight={600} color={"text.secondary"}>
-          Duration
-        </Typography>
-      </Grid>
-      {/* <Grid item xs={12} sm={4} md={4}>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        display={"flex"}
+        gap={1}
+        alignItems={"center"}
+      >
         <FormTextField
-          register={register("hours")}
-          label={"Hours"}
-          required={true}
-          type="number"
-          error={!!errors?.hours?.message}
-          helperText={errors?.hours?.message?.toString()}
+          register={register("section")}
+          label={"Add Section"}
+          placeholder="Enter Secion Title"
         />
-      </Grid> */}
+        <IconButton onClick={handleAddSection}>
+          <AddCircleOutlineRoundedIcon fontSize="large" />
+        </IconButton>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12}>
+        <FormAutocomplete
+          error={!!errors?.selectSection?.message}
+          helperText={errors?.selectSection?.message?.toString()}
+          setValue={setValue}
+          label={"Select Section"}
+          options={sectionList}
+          id={"selectSection"}
+          required={true}
+          disabled={false}
+          control={control}
+          watch={watch}
+        />
+      </Grid>
+      <Grid item xs={12} sm={12} md={12}>
+        <FormTextField
+          required={true}
+          register={register("quizTitle")}
+          label={"Quiz Title"}
+          placeholder="Enter a title for the quiz"
+          error={!!errors?.quizTitle?.message}
+          helperText={errors?.quizTitle?.message?.toString()}
+        />
+      </Grid>
       <Grid item xs={12} sm={6} md={6}>
         <FormTextField
           register={register("minutes")}
