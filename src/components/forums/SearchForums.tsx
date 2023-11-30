@@ -21,8 +21,9 @@ import { StartDiscussionForum } from "./StartDiscussionForum";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CardHeading } from "../common/CardHeading";
 import { forumData } from "../../util";
+import { useAuthContext } from "../../contexts/AuthContext";
 
-export const SearchForums = () => {
+const SearchForums = () => {
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -162,3 +163,5 @@ export const SearchForums = () => {
     </>
   );
 };
+
+export default SearchForums;

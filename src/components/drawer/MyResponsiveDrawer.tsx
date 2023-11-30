@@ -25,7 +25,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb } from "../breadcrumbs/BreadCrumb";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -77,11 +77,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const MyResponsiveDrawer = () => {
+  const { authContext } = useAuthContext();
+
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const { authContext } = useAuthContext();
 
   const [userDetails, setUserDetails] = useState<any>(null);
 
@@ -137,9 +137,9 @@ export const MyResponsiveDrawer = () => {
     const timeout = setTimeout(() => {
       sessionStorage.clear();
       localStorage.clear();
-      navigate("/");
-      setShowBackdrop(false);
       window.history.replaceState(null, "", "/");
+      navigate("/", { replace: true });
+      setShowBackdrop(false);
     }, 1000);
     return () => clearTimeout(timeout);
   };

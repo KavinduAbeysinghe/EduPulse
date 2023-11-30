@@ -9,8 +9,13 @@ import { FormTextField } from "../../components/inputs/FormTextField";
 import { FormDatePicker } from "../../components/datepickers/FormDatePicker";
 import { SearchButton } from "../../components/buttons/SearchButton";
 import SearchTable from "../../components/tables/SearchTable";
+import { useNotification } from "../../contexts/NotificationContext";
 
-export const EnrolledModules = () => {
+interface EnrolledModulesProps {
+  isUserCreated: boolean;
+}
+
+export const EnrolledModules = ({ isUserCreated }: EnrolledModulesProps) => {
   const [data, setData] = useState<Array<any>>([]);
   const [enrolledModuleTblData, setEnrolledModuleTblData] = useState<
     Array<any>
@@ -32,10 +37,20 @@ export const EnrolledModules = () => {
     "Course Status",
   ];
 
+  const notify = useNotification();
+
+  const handleEnrollNow = () => {
+    if (isUserCreated) {
+      console.log("ddc");
+    } else {
+      notify.warn("Please Create a User First");
+    }
+  };
+
   return (
     <FormCard header={"Enrolled Modules"} onResetClick={() => {}}>
       <Box mb={3}>
-        <PrimaryButton text={"+ Enroll Now"} />
+        <PrimaryButton text={"+ Enroll Now"} onClick={handleEnrollNow} />
       </Box>
 
       <Grid container spacing={2}>

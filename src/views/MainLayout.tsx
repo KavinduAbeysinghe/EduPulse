@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "./login/Login";
 import { Box, CssBaseline } from "@mui/material";
 import { MyResponsiveDrawer } from "../components/drawer/MyResponsiveDrawer";
@@ -26,6 +26,10 @@ export const MainLayout = () => {
         <Route element={<Layout />} path="/control/*" />
       </Route>
       <Route element={<Unauthorized />} path="/unauthorized" />
+      <Route
+        path={"/*"}
+        element={<Navigate to={"/"} replace relative="route" />}
+      />
     </Routes>
   );
 };
@@ -76,7 +80,11 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                isRouteAccessible={authorizeRole([roles.STAFF, roles.ADMIN])}
+                isRouteAccessible={authorizeRole([
+                  roles.STAFF,
+                  roles.ADMIN,
+                  roles.STUDENT,
+                ])}
                 redirectRoute="/unauthorized"
               />
             }
@@ -86,7 +94,11 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                isRouteAccessible={authorizeRole([roles.STAFF, roles.ADMIN])}
+                isRouteAccessible={authorizeRole([
+                  roles.STAFF,
+                  roles.ADMIN,
+                  roles.STUDENT,
+                ])}
                 redirectRoute="/unauthorized"
               />
             }

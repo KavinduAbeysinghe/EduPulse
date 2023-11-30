@@ -58,7 +58,11 @@ const collaborators = [
   },
 ];
 
-export const CreateModule = () => {
+interface CreateModuleProps {
+  setIsModuleCreated: any;
+}
+
+export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
   const [isCourseSelected, setIsCourseSelected] = useState<boolean>(false);
 
   const location = useLocation();

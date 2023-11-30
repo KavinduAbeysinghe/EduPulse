@@ -332,7 +332,7 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
                       onClick={() => handleSelectAnswer(o?.optionId)}
                     >
                       <ListItemIcon>
-                        <CircleRoundedIcon />
+                        <CircleRoundedIcon fontSize="small" />
                       </ListItemIcon>
                       <ListItemText primary={o?.option} />
                     </ListItemButton>

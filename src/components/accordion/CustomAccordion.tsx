@@ -123,6 +123,7 @@ export default function CustomizedAccordions({
     <div>
       {quizData && (
         <QuizModal
+          setQuizData={setQuizData}
           open={showQModal}
           setOpen={setShowQModal}
           quizData={quizData}

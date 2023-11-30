@@ -9,21 +9,50 @@ import { FormTextField } from "../../components/inputs/FormTextField";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormDatePicker } from "../../components/datepickers/FormDatePicker";
-import { genders, nationalities, staffTypes } from "../../util";
+import {
+  genders,
+  nationalities,
+  roleOptions,
+  roles,
+  staffTypes,
+} from "../../util";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { useNotification } from "../../contexts/NotificationContext";
 
-export const CreateUserForm = () => {
+interface CreateUserFormProps {
+  setIsUserCreated: any;
+  setRole: any;
+}
+
+export const CreateUserForm = ({
+  setIsUserCreated,
+  setRole,
+}: CreateUserFormProps) => {
   const [nationalityList, setNationalityList] = useState<Array<any>>([]);
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
   const [uploadedImg, setUploadedImg] = useState<any>("");
+  const [userCreated, setUserCreated] = useState<boolean>(false);
 
   const notify = useNotification();
+
+  const defaultValues = {
+    role: roles.STUDENT,
+    dob: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    address: "",
+    email: "",
+    telephone: "",
+    mobile: "",
+    nic: "",
+    nationality: "",
+  };
 
   const commonError = "Field is required";
 
   const validationSchema1 = Yup.object().shape({
-    role: Yup.string().required(commonError),
+    role: Yup.number().required(commonError).typeError(commonError),
     dob: Yup.string()
       .required(commonError)
       .test("required-err", commonError, (value) => {
@@ -47,7 +76,12 @@ export const CreateUserForm = () => {
     formState: { errors: errors1 },
     handleSubmit: handleSubmit1,
     control: control1,
+    reset: reset1,
   } = useForm({ resolver: yupResolver(validationSchema1) });
+
+  useEffect(() => {
+    setIsUserCreated(userCreated);
+  }, [userCreated]);
 
   const validationSchema2 = Yup.object().shape({
     username: Yup.string().required(commonError),
@@ -60,6 +94,7 @@ export const CreateUserForm = () => {
     formState: { errors: errors2 },
     handleSubmit: handleSubmit2,
     control: control2,
+    reset: reset2,
   } = useForm({ resolver: yupResolver(validationSchema2) });
 
   const fileInputRef = useRef<any>(null);
@@ -107,19 +142,43 @@ export const CreateUserForm = () => {
     const timeout = setTimeout(() => {
       console.log(data);
       notify.success("User Creation Success");
+      setUserCreated(true);
       setShowBackdrop(false);
     }, 1000);
     return () => clearTimeout(timeout);
   };
 
   const handleProfileUpdate = (data: any) => {
-    setShowBackdrop(true);
-    const timeout = setTimeout(() => {
-      console.log(data);
-      notify.success("Profile Update Success");
-      setShowBackdrop(false);
-    }, 1000);
-    return () => clearTimeout(timeout);
+    if (userCreated) {
+      setShowBackdrop(true);
+      const timeout = setTimeout(() => {
+        console.log(data);
+        notify.success("Profile Update Success");
+        setShowBackdrop(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    } else {
+      notify.warn("Please Create a User First");
+    }
+  };
+
+  const role = watch1("role");
+
+  useEffect(() => {
+    if (role) {
+      setRole(role);
+    }
+  }, [role]);
+
+  const handleResetForm1 = () => {
+    reset1({});
+    reset1(defaultValues);
+  };
+
+  const handleResetForm2 = () => {
+    reset2({});
+    setValue2("username", "");
+    setUploadedImg("");
   };
 
   return (
@@ -127,12 +186,12 @@ export const CreateUserForm = () => {
       <CustomBackdrop open={showBackdrop} />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={9}>
-          <FormCard header={"Create User"} onResetClick={() => {}}>
+          <FormCard header={"Create User"} onResetClick={handleResetForm1}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={3}>
                 <FormDropdown
                   name={"role"}
-                  options={staffTypes}
+                  options={roleOptions}
                   error={!!errors1?.role?.message}
                   helperText={errors1?.role?.message?.toString()}
                   required={true}
@@ -257,7 +316,7 @@ export const CreateUserForm = () => {
           </FormCard>
         </Grid>
         <Grid item md={3}>
-          <FormCard header={"Profile"} onResetClick={() => {}}>
+          <FormCard header={"Profile"} onResetClick={handleResetForm2}>
             <Grid container spacing={2.65}>
               <Grid
                 item

@@ -33,17 +33,27 @@ import { CustomRadioGroup } from "../radio/CustomRadioGroup";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PrimaryButton } from "../buttons/PrimaryButton";
+import AlertDialog from "./AlertDialog2";
 
 interface QuizModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   quizData: any;
+  setQuizData: any;
 }
 
-export const QuizModal = ({ open, setOpen, quizData }: QuizModalProps) => {
+export const QuizModal = ({
+  open,
+  setOpen,
+  quizData,
+  setQuizData,
+}: QuizModalProps) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [openAlert2, setOpenAlert2] = useState<boolean>(false);
 
   const quizMinutes = quizData?.minutes;
 
@@ -108,13 +118,46 @@ export const QuizModal = ({ open, setOpen, quizData }: QuizModalProps) => {
 
   const { fields } = useFieldArray({ name: "questionsList", control });
 
+  const handleOpenAlert = (data: any) => {
+    // console.log(data);
+    // setOpen(false);
+    setOpenAlert(true);
+  };
+
   const onSubmit = (data: any) => {
     console.log(data);
+    setOpenAlert(false);
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (progressValue === 0) {
+      console.log(getValues());
+      setOpen(false);
+      setOpenAlert2(true);
+    }
+  }, [progressValue]);
+
   return (
     <React.Fragment>
+      <AlertDialog
+        title={"Quiz Submission"}
+        message={"Your Quiz was automatically submitted!"}
+        confirmModal={true}
+        okClick={() => {
+          setOpenAlert2(false);
+          setQuizData(null);
+        }}
+        open={openAlert2}
+      />
+      <AlertDialog
+        title={"Quiz Submission"}
+        message={"Do you want to submit this quiz?"}
+        confirmModal={false}
+        yesClick={handleSubmit(onSubmit)}
+        noClick={() => setOpenAlert(false)}
+        open={openAlert}
+      />
       <Dialog fullWidth={true} maxWidth={"xl"} open={open}>
         <DialogTitle>{quizData?.title}</DialogTitle>
         <DialogContent>
@@ -190,7 +233,7 @@ export const QuizModal = ({ open, setOpen, quizData }: QuizModalProps) => {
               justifyContent={"flex-end"}
               alignItems={"center"}
             >
-              <PrimaryButton text={"Submit"} onClick={handleSubmit(onSubmit)} />
+              <PrimaryButton text={"Submit"} onClick={handleOpenAlert} />
             </Grid>
           </Grid>
         </DialogContent>

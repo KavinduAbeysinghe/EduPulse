@@ -9,6 +9,7 @@ export const ModuleManagement = () => {
       <Route element={<SearchModules />} path={"/"} />
       <Route element={<HorizontalNonLinearStepper />} path={"/view-module"} />
       <Route element={<HorizontalNonLinearStepper />} path={"/create-module"} />
+      <Route element={<HorizontalNonLinearStepper />} path={"/edit-module"} />
     </Routes>
   );
 };

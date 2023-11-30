@@ -62,6 +62,7 @@ interface FormSwitchProps {
 export const FormSwitch = ({ control, label }: FormSwitchProps) => {
   return (
     <FormControlLabel
+      sx={{ color: "text.secondary" }}
       control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
       label={label}
     />

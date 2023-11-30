@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -34,12 +35,14 @@ export const AuthContextProvider: React.FC<any> = ({ children }) => {
     sessionStorage.setItem("authContext", JSON.stringify(authContext));
   }, [authContext]);
 
-  // useLayoutEffect(() => {
-  //   const state = sessionStorage.getItem("authContext");
-  //   if (state) {
-  //     setAuthContext(JSON.parse(state));
-  //   }
-  // }, []);
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    if (location.pathname === "/") {
+      sessionStorage.clear();
+      localStorage.clear();
+    }
+  }, [location]);
 
   const authorizeRole = (roles: Array<number>) => {
     console.log(

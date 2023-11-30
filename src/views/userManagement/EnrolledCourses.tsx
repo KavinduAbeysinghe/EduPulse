@@ -15,14 +15,20 @@ import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { commonDateFormat, courseData } from "../../util";
 import { CustomChip } from "../../components/chips/CustomChip";
 import dayjs from "dayjs";
+import { useNotification } from "../../contexts/NotificationContext";
 
-export const EnrolledCourses = () => {
+interface EnrolledCourseProps {
+  isUserCreated: boolean;
+}
+
+export const EnrolledCourses = ({ isUserCreated }: EnrolledCourseProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
   const [courseList, setCourseList] = useState<Array<any>>([]);
   const [enrolledCourseTableData, setEnrolledCourseTableData] = useState<
     Array<any>
   >([]);
+  const notify = useNotification();
   const [data, setData] = useState<Array<any>>([]);
 
   const {
@@ -109,6 +115,14 @@ export const EnrolledCourses = () => {
     return () => clearTimeout(timeout);
   };
 
+  const handleEnrollNow = () => {
+    if (isUserCreated) {
+      setShowModal(true);
+    } else {
+      notify.warn("Please Create a User First");
+    }
+  };
+
   return (
     <>
       <CustomBackdrop open={showBackdrop} />
@@ -127,10 +141,7 @@ export const EnrolledCourses = () => {
       />
       <FormCard header={"Enrolled Courses"} onResetClick={handleReset}>
         <Box mb={3}>
-          <PrimaryButton
-            text={"+ Enroll Now"}
-            onClick={() => setShowModal(true)}
-          />
+          <PrimaryButton text={"+ Enroll Now"} onClick={handleEnrollNow} />
         </Box>
 
         <Grid container spacing={2}>

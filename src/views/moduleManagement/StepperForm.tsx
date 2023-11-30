@@ -10,22 +10,23 @@ import { ModuleContent } from "./ModuleContent";
 import { useLocation } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
 
-const steps = [
-  {
-    name: "General Module Information",
-    content: <CreateModule />,
-  },
-  {
-    name: "Module Content",
-    content: <ModuleContent />,
-  },
-];
-
 export default function HorizontalNonLinearStepper() {
+  const [isModuleCreated, setIsModuleCreated] = useState<boolean>(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
+
+  const steps = [
+    {
+      name: "General Module Information",
+      content: <CreateModule setIsModuleCreated={setIsModuleCreated} />,
+    },
+    {
+      name: "Module Content",
+      content: <ModuleContent />,
+    },
+  ];
 
   const totalSteps = () => {
     return steps.length;

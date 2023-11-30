@@ -18,6 +18,21 @@ export const roles = {
   ADMIN: 1003,
 };
 
+export const roleOptions = [
+  {
+    label: "Student",
+    value: roles.STUDENT,
+  },
+  {
+    label: "Staff",
+    value: roles.STAFF,
+  },
+  {
+    label: "Admin",
+    value: roles.ADMIN,
+  },
+];
+
 export const users = [
   {
     id: 1,

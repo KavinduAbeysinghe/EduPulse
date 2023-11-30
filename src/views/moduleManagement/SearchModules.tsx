@@ -17,13 +17,16 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import AlertDialogSlide from "../../components/modals/AlertDialog";
-import { courseData, moduleData, userData } from "../../util";
+import { courseData, moduleData, roles, userData } from "../../util";
 import { SearchButton } from "../../components/buttons/SearchButton";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import dayjs from "dayjs";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const SearchModules = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
+
+  const { authContext } = useAuthContext();
 
   const [openAlert, setOpenAlert] = useState<boolean>(false);
 
@@ -135,17 +138,31 @@ export const SearchModules = () => {
   const handleNavigateEdit = (id: any) => {
     const module = { id: id, page: "edit" };
     searchParams.set("module", JSON.stringify(module));
-    navigate(`/control/module-management/view-module?${searchParams}`);
+    navigate(`/control/module-management/edit-module?${searchParams}`);
   };
   const handleDelete = (id: any) => {
     setOpenAlert(true);
   };
 
-  const actionButtons = [
+  const [actionButtons, setActionButtons] = useState<Array<any>>([]);
+
+  const aB = [
     { tooltip: "View", icon: faEye, handleClick: handleNavigateView },
     { tooltip: "Edit", icon: faPenToSquare, handleClick: handleNavigateEdit },
     { tooltip: "Delete", icon: faTrash, handleClick: handleDelete },
   ];
+
+  const [isAccessible, setIsAccessible] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (authContext.roles.includes(roles.STUDENT)) {
+      setIsAccessible(false);
+      setActionButtons(aB?.filter((item: any) => item?.tooltip === "View"));
+    } else {
+      setIsAccessible(true);
+      setActionButtons(aB);
+    }
+  }, [authContext]);
 
   const getYearsList = () =>
     useMemo(() => {
@@ -196,7 +213,9 @@ export const SearchModules = () => {
         setOpenAlert={setOpenAlert}
       />
       <Box mb={2}>
-        <PrimaryButton text={"+ Add Module"} onClick={handleCreate} />
+        {isAccessible && (
+          <PrimaryButton text={"+ Add Module"} onClick={handleCreate} />
+        )}
       </Box>
       <Grid container rowSpacing={7} columnSpacing={2}>
         <Grid item xs={12} sm={12} md={12}>

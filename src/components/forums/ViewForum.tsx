@@ -26,9 +26,18 @@ import { useLocation } from "react-router-dom";
 import { forumData, userData } from "../../util";
 import dayjs from "dayjs";
 import { CustomBackdrop } from "../backdrops/CustomBackdrop";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const ViewForum = () => {
   const location = useLocation();
+
+  const [userDetails, setUserDetails] = useState<any>(null);
+
+  const { authContext } = useAuthContext();
+
+  useLayoutEffect(() => {
+    setUserDetails(authContext?.user);
+  }, [authContext]);
 
   const searchParams = new URLSearchParams(location.search);
 
@@ -98,10 +107,10 @@ export const ViewForum = () => {
     setReplyList((prev) => {
       const newArr = [...prev];
       newArr.push({
-        name: "Steph Williams",
+        name: userDetails?.name,
         designation: "Computer Science Student",
-        profileImg: p1,
-        date: "24 Nov 2023",
+        profileImg: userDetails?.profileImg,
+        date: dayjs(new Date()).format("DD/MM/YYYY"),
         message: data?.message,
       });
       return newArr;

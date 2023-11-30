@@ -1,6 +1,9 @@
-import { faEye, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import {
+  faEye,
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import SearchTable from "../../components/tables/SearchTable";
-import { faEllipsis, faTrash } from "@fortawesome/free-solid-svg-icons";
 import {
   Box,
   Button,
@@ -14,7 +17,7 @@ import { FormTextField } from "../../components/inputs/FormTextField";
 import { FormButton } from "../../components/buttons/FormButton";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { PrimaryButton } from "../../components/buttons/PrimaryButton";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { CustomChip } from "../../components/chips/CustomChip";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 import { set, useForm } from "react-hook-form";
@@ -24,7 +27,10 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchButton } from "../../components/buttons/SearchButton";
-import { courseData } from "../../util";
+import { courseData, roles } from "../../util";
+import AlertDialogSlide from "../../components/modals/AlertDialog";
+import { useNotification } from "../../contexts/NotificationContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const SearchCourse = () => {
   const location = useLocation();
@@ -33,7 +39,11 @@ export const SearchCourse = () => {
 
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
 
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   const navigate = useNavigate();
+
+  const { authContext } = useAuthContext();
 
   const coursesTableHeads = [
     "Course Code",
@@ -71,9 +81,29 @@ export const SearchCourse = () => {
     navigate("/control/course-management/edit-course");
   };
 
-  const actionButtons = [
-    { tooltip: "More", icon: faEllipsis, handleClick: handleNaviagteView },
+  const handleDelete = () => {
+    setShowAlert(true);
+  };
+
+  const [actionButtons, setActionButtons] = useState<Array<any>>([]);
+
+  const aB = [
+    { tooltip: "View", icon: faEye, handleClick: handleNaviagteView },
+    { tooltip: "Edit", icon: faPenToSquare, handleClick: handleNaviagteEdit },
+    { tooltip: "Delete", icon: faTrash, handleClick: handleDelete },
   ];
+
+  const [isAccessible, setIsAccessible] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (authContext.roles.includes(roles.STUDENT)) {
+      setIsAccessible(false);
+      setActionButtons(aB?.filter((item: any) => item?.tooltip === "View"));
+    } else {
+      setIsAccessible(true);
+      setActionButtons(aB);
+    }
+  }, [authContext]);
 
   const defaultValues = {
     courseName: "",
@@ -117,11 +147,32 @@ export const SearchCourse = () => {
     navigate("/control/course-management/create-course");
   };
 
+  const notify = useNotification();
+
+  const handleYesClick = () => {
+    setShowAlert(false);
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      notify.success("Deleted Successfully");
+      setShowBackdrop(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  };
+
   return (
     <>
+      <AlertDialogSlide
+        message={"Do you want to remove the selected course?"}
+        handleYesClick={handleYesClick}
+        handleNoClick={() => setShowAlert(false)}
+        openAlert={showAlert}
+        setOpenAlert={setShowAlert}
+      />
       <CustomBackdrop open={showBackdrop} />
       <Box>
-        <PrimaryButton text={"+ Add Course"} onClick={handleCreate} />
+        {isAccessible && (
+          <PrimaryButton text={"+ Add Course"} onClick={handleCreate} />
+        )}
       </Box>
       <Box className={"basic-card"} mt={2}>
         <Box px={2}>
