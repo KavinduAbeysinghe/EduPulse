@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { CustomChip } from "../chips/CustomChip";
 import { TransitionGroup } from "react-transition-group";
 import { useLocation } from "react-router-dom";
-import { forumData, userData } from "../../util";
+import { forumData, userData, users } from "../../util";
 import dayjs from "dayjs";
 import { CustomBackdrop } from "../backdrops/CustomBackdrop";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -62,12 +62,12 @@ export const ViewForum = () => {
         description: forum?.description,
         status: "active",
         createdDate: dayjs(new Date(forum?.date ?? "")).format("DD/MM/YYYY"),
-        createdBy: userData?.find((d: any) => d?.id === forum?.createdUserId)
+        createdBy: users?.find((d: any) => d?.id === forum?.createdUserId)
           ?.username,
       });
       setReplyList(
         forum?.replies?.map((d: any) => {
-          const usr = userData?.find((dta: any) => dta?.id === d?.userId);
+          const usr = users?.find((dta: any) => dta?.id === d?.userId);
           console.log("usr", usr);
           return {
             name: usr?.name,
@@ -188,21 +188,35 @@ export const ViewForum = () => {
           </Stack>
           <Typography mt={2}>{forumDetails?.description}</Typography>
           <Divider className={"custom-divider-dark"} sx={{ my: 3 }} />
-          <Box ref={boxRef} sx={{ height: "500px", overflow: "auto" }}>
-            <TransitionGroup>
-              {replyList?.map((reply: any, index) => (
-                <Collapse>
-                  <MessageView
-                    key={index}
-                    profileImg={reply?.profileImg}
-                    name={reply?.name}
-                    description={reply?.message}
-                    date={reply?.date}
-                    designation={reply?.designation}
-                  />
-                </Collapse>
-              ))}
-            </TransitionGroup>
+          <Box
+            ref={boxRef}
+            sx={{
+              height: replyList.length > 0 ? "500px" : "",
+              overflow: "auto",
+            }}
+          >
+            {replyList.length > 0 ? (
+              <>
+                <TransitionGroup>
+                  {replyList?.map((reply: any, index) => (
+                    <Collapse>
+                      <MessageView
+                        key={index}
+                        profileImg={reply?.profileImg}
+                        name={reply?.name}
+                        description={reply?.message}
+                        date={reply?.date}
+                        designation={reply?.designation}
+                      />
+                    </Collapse>
+                  ))}
+                </TransitionGroup>
+              </>
+            ) : (
+              <Typography textAlign={"center"} color={"text.secondary"}>
+                No Replies Available
+              </Typography>
+            )}
           </Box>
           <Grid container spacing={2} my={3}>
             <Grid item xs={12} sm={12} md={12} container gap={2}>

@@ -11,6 +11,7 @@ import { ProtectedRoute } from "./common/ProtectedRoute";
 import { Unauthorized } from "./common/Unauthorized";
 import { roles } from "../util";
 import React, { Suspense } from "react";
+import { Footer } from "../components/footer/Footer";
 
 const Dashboard = React.lazy(() => import("../views/dashboard/Dashboard"));
 
@@ -133,6 +134,7 @@ const Layout = () => {
             />
           </Route>
         </Routes>
+        {/* <Footer /> */}
       </Box>
     </Box>
   );

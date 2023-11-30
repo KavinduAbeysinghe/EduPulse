@@ -11,6 +11,9 @@ import { FileUploader } from "../common/FileUploader";
 import { useNotification } from "../../contexts/NotificationContext";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { forumData } from "../../util";
+import { useAuthContext } from "../../contexts/AuthContext";
+import defImg from "../../assets/images/defImg.jpg";
 
 interface StartDiscussionForumProps {
   setMyForums: any;
@@ -57,8 +60,6 @@ export const StartDiscussionForum = ({
 
   const handleFileChange = (e: any) => {
     // Handle the selected files here
-    console.log("File handler");
-
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -90,21 +91,35 @@ export const StartDiscussionForum = ({
     notify.success("File upload success");
   };
 
+  const { authContext } = useAuthContext();
+
   const onSubmit = (data: any) => {
     console.log(data);
-    setMyForums((prev: any) => {
-      const newArr = [...prev];
-      newArr.push({
-        id: 5,
-        title: data?.title,
-        description: data?.description,
-        date: "2023-11-27",
-        people: [],
-        code: data?.code,
-        img: uploadedImg,
-      });
-      return newArr;
+    // setMyForums((prev: any) => {
+    //   const newArr = [...prev];
+    //   newArr.push({
+    //     id: newArr.length + 1,
+    //     title: data?.title,
+    //     description: data?.description,
+    //     date: "2023-11-27",
+    //     people: [],
+    //     code: data?.code,
+    //     img: uploadedImg,
+    //   });
+    //   return newArr;
+    // });
+    forumData.push({
+      id: forumData.length + 1,
+      title: data?.title,
+      createdUserId: authContext.user.id,
+      description: data?.description,
+      date: "2023-11-27",
+      people: [],
+      code: data?.code,
+      img: uploadedImg ? uploadedImg : defImg,
+      replies: [],
     });
+    notify.success("New Disscussion Created");
     setOpen(false);
   };
 
@@ -155,7 +170,7 @@ export const StartDiscussionForum = ({
         />
       </Grid>
       <Grid item container md={12} justifyContent={"end"} alignItems={"center"}>
-        <PrimaryButton text={"> Create"} onClick={handleSubmit(onSubmit)} />
+        <PrimaryButton text={"Create"} onClick={handleSubmit(onSubmit)} />
       </Grid>
     </Grid>
   );

@@ -16,6 +16,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
 import { useLocation } from "react-router-dom";
 import {
+  commonDateFormat,
   commonValidationError,
   courseData,
   moduleData,
@@ -27,6 +28,7 @@ import { PrimaryButton } from "../../components/buttons/PrimaryButton";
 import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 const collaborators = [
   {
@@ -124,6 +126,8 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
         dayjs(new Date(module?.createdDate ?? "")).format("DD/MM/YYYY")
       );
       setIsModuleCreated(true);
+    } else {
+      setValue("createdDate", dayjs(new Date()).format(commonDateFormat));
     }
   }, [location]);
 
@@ -249,9 +253,6 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
         </Stack>
         <Grid container mt={1} spacing={2}>
           <Grid item xs={12} sm={12} md={12}>
-            <Typography fontSize={"small"} mb={1}>
-              Select the course first *
-            </Typography>
             <FormAutocomplete
               error={!!errors?.course?.message}
               helperText={errors?.course?.message?.toString()}
@@ -302,14 +303,12 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
           <Grid item xs={12} sm={12} md={3}>
             <FormDatePicker
               label={"Created Date"}
-              error={course ? !!errors?.createdDate?.message : false}
-              helperText={
-                course ? errors?.createdDate?.message?.toString() : ""
-              }
+              error={false}
+              helperText={""}
               required={!!course}
               name={"createdDate"}
               control={control}
-              disabled={!isCourseSelected || page === "view"}
+              disabled={true}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
@@ -331,7 +330,7 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
               Learning Objectives
             </Typography>
             {page !== "view" && (
-              <Stack direction={"row"} gap={1}>
+              <Stack direction={"row"} gap={1} alignItems={"center"}>
                 <FormTextField
                   disabled={!isCourseSelected}
                   register={register("learningObjective")}
@@ -339,7 +338,7 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
                   placeholder="Enter learning objective to add"
                 />
                 <IconButton onClick={handleAddLearnObj}>
-                  <AddRoundedIcon />
+                  <AddCircleOutlineRoundedIcon fontSize="large" />
                 </IconButton>
               </Stack>
             )}
@@ -358,7 +357,7 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
               Colloborators
             </Typography>
             {page !== "view" && (
-              <Stack direction={"row"} gap={1}>
+              <Stack direction={"row"} gap={1} alignItems={"center"}>
                 <FormAutocomplete
                   error={false}
                   helperText={""}
@@ -372,7 +371,7 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
                   watch={watch}
                 />
                 <IconButton onClick={handleAddCollabs}>
-                  <AddRoundedIcon />
+                  <AddCircleOutlineRoundedIcon fontSize="large" />
                 </IconButton>
               </Stack>
             )}
@@ -383,17 +382,19 @@ export const CreateModule = ({ setIsModuleCreated }: CreateModuleProps) => {
               setData={setCollabsList}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            display={"flex"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
-          >
-            <PrimaryButton text={"Save"} onClick={handleSubmit(onSubmit)} />
-          </Grid>
+          {page !== "view" && (
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              display={"flex"}
+              justifyContent={"flex-end"}
+              alignItems={"center"}
+            >
+              <PrimaryButton text={"Save"} onClick={handleSubmit(onSubmit)} />
+            </Grid>
+          )}
         </Grid>
       </Box>
     </>

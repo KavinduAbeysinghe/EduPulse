@@ -37,7 +37,13 @@ export const ForumCard = ({
         },
       }}
     >
-      <CardActionArea>
+      <CardActionArea
+        sx={{
+          display: "flex",
+          flexDirection: " column",
+          height: "100%",
+        }}
+      >
         <CardMedia
           loading="lazy"
           component="img"
@@ -60,30 +66,30 @@ export const ForumCard = ({
             // },
           }}
         />
-        <CardContent sx={{ mt: 9 }}>
-          <Stack
-            direction={"row"}
-            useFlexGap
-            flexWrap={"wrap"}
-            justifyContent={"space-between"}
+        <CardContent
+          sx={{
+            mt: 9,
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <Typography
+            fontSize={"small"}
+            fontWeight={600}
+            gutterBottom
+            component="div"
           >
-            <Typography
-              fontSize={"small"}
-              fontWeight={600}
-              gutterBottom
-              component="div"
-            >
-              {title}
-            </Typography>
-            <Typography
-              color={"text.secondary"}
-              fontSize={"small"}
-              gutterBottom
-              component="div"
-            >
-              {date}
-            </Typography>
-          </Stack>
+            {title}
+          </Typography>
+          <Typography
+            color={"text.secondary"}
+            fontSize={"small"}
+            gutterBottom
+            component="div"
+          >
+            Created On: {date}
+          </Typography>
 
           <Typography
             mt={1}
@@ -93,7 +99,15 @@ export const ForumCard = ({
           >
             {description}
           </Typography>
-          <AvatarGroup max={4} sx={{ mt: 1 }}>
+          <AvatarGroup
+            max={4}
+            sx={{
+              mt: 1,
+              height: "100%",
+              display: "flex",
+              alignItems: "flex-end",
+            }}
+          >
             {people?.map((p: any, index) => (
               <Avatar key={index} alt="Remy Sharp" src={p} />
             ))}

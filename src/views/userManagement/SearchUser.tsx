@@ -389,7 +389,8 @@ export const SearchUser = () => {
               }
               id={"id"}
               paginate={true}
-              actionButtons={actionButtons}
+              // actionButtons={actionButtons}
+              viewMoreOptions={actionButtons}
             />
           </Box>
         </Grid>

@@ -308,7 +308,8 @@ export const SearchModules = () => {
                   tableHeaders={tableHeads}
                   id={"id"}
                   paginate={true}
-                  actionButtons={actionButtons}
+                  // actionButtons={actionButtons}
+                  viewMoreOptions={actionButtons}
                 />
               </Grid>
             </Grid>

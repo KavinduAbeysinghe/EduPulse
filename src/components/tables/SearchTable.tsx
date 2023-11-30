@@ -19,6 +19,7 @@ import ActionButton from "../buttons/ActionButton";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ViewMoreActionButton } from "../buttons/ViewMoreActionButton";
 
 interface TableData {
   tableData: Array<any>;
@@ -76,7 +77,7 @@ const SearchTable = ({
   );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("clicked");
+    console.log("clicked", event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
@@ -113,6 +114,7 @@ const SearchTable = ({
           <TableBody>
             {paginatedData?.map((row, index) => (
               <StyledTableRow
+                hover
                 key={index}
                 sx={{ borderLeft: row?.isIncompleted ? "5px solid red" : "" }}
               >
@@ -143,35 +145,11 @@ const SearchTable = ({
                 )}
                 {viewMoreOptions?.length ? (
                   <StyledTableCell align="right">
-                    <Tooltip title={"More"}>
-                      <IconButton onClick={handleClick}>
-                        <FontAwesomeIcon
-                          fontSize={"large"}
-                          icon={faEllipsis}
-                          style={{
-                            cursor: "pointer",
-                            marginLeft: 5,
-                            marginRight: 5,
-                            color: "gray",
-                            verticalAlign: "center",
-                          }}
-                        />
-                      </IconButton>
-                    </Tooltip>
-                    <Popover
-                      id={ID}
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                      }}
-                    >
-                      <Typography sx={{ p: 2 }}>
-                        The content of the Popover.
-                      </Typography>
-                    </Popover>
+                    <ViewMoreActionButton
+                      options={viewMoreOptions}
+                      row={row}
+                      id={id}
+                    />
                   </StyledTableCell>
                 ) : (
                   <></>

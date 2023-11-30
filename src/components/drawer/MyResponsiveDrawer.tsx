@@ -6,9 +6,12 @@ import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import {
+  Alert,
   AppBar,
   Avatar,
   Box,
+  Button,
+  Container,
   Divider,
   Drawer,
   IconButton,
@@ -18,6 +21,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Popover,
+  Slide,
   Stack,
   Toolbar,
   Typography,
@@ -31,6 +36,8 @@ import { Breadcrumb } from "../breadcrumbs/BreadCrumb";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { userData, users } from "../../util";
 import { CustomBackdrop } from "../backdrops/CustomBackdrop";
+import logo from "../../assets/images/logos.png";
+import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
 const drawerWidth = 220;
 
@@ -159,7 +166,8 @@ export const MyResponsiveDrawer = () => {
           justifyContent: "center",
         }}
       >
-        <Typography fontWeight={700} color={"#fff"}>
+        <img src={logo} alt="" height={40} />
+        <Typography fontWeight={700} color={"#fff"} ml={2}>
           Edu Pulse
         </Typography>
         {/* <IconButton>
@@ -235,6 +243,46 @@ export const MyResponsiveDrawer = () => {
   //     }
   //   }, []);
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const [alertData, setAlertData] = useState<Array<any>>([]);
+
+  const alerts = [
+    {
+      id: 1,
+      message: "DBMS Coursework submission due 15 Nov 2023",
+    },
+    {
+      id: 2,
+      message: "Java module new materials added",
+    },
+    {
+      id: 3,
+      message: "Java coursework submission due today at 1 PM",
+    },
+  ];
+
+  useLayoutEffect(() => {
+    setAlertData(alerts);
+  }, []);
+
+  const handleClearNot = () => {
+    setAlertData([]);
+  };
+
   return (
     <>
       <CustomBackdrop open={showBackdrop} />
@@ -266,7 +314,50 @@ export const MyResponsiveDrawer = () => {
             width={"100%"}
           >
             <Breadcrumb />
-
+            <IconButton onClick={handleClick}>
+              <NotificationsRoundedIcon />
+            </IconButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              {alertData.length > 0 ? (
+                <>
+                  <Stack p={2} gap={1}>
+                    {alertData?.map((alert) => (
+                      <Slide
+                        direction="right"
+                        in={true}
+                        mountOnEnter
+                        unmountOnExit
+                      >
+                        <Alert key={alert.id} severity="info">
+                          {alert.message}
+                        </Alert>
+                      </Slide>
+                    ))}
+                    <Box sx={{ justifyContent: "flex-end", display: "flex" }}>
+                      <Button
+                        sx={{ color: "text.secondary", textTransform: "none" }}
+                        onClick={handleClearNot}
+                      >
+                        Clear
+                      </Button>
+                    </Box>
+                  </Stack>
+                </>
+              ) : (
+                <Typography p={2} color={"text.secondary"} fontSize={"small"}>
+                  No Notifications
+                </Typography>
+              )}
+            </Popover>
             {/* <Search>
               <SearchIconWrapper>
                 <SearchRoundedIcon />

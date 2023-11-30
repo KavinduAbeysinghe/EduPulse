@@ -44,6 +44,7 @@ export const users = [
     status: "active",
     email: "john.doe@example.com",
     role: [roles.ADMIN],
+    designation: "Senior Lecturer",
   },
   {
     id: 2,
@@ -55,6 +56,7 @@ export const users = [
     status: "active",
     email: "alice.johnson@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 3,
@@ -66,6 +68,7 @@ export const users = [
     status: "active",
     email: "bob.smith@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 4,
@@ -77,6 +80,7 @@ export const users = [
     status: "active",
     email: "eva.martinez@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 5,
@@ -88,6 +92,7 @@ export const users = [
     status: "active",
     email: "michael.brown@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 6,
@@ -99,6 +104,7 @@ export const users = [
     status: "active",
     email: "lily.white@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 7,
@@ -110,6 +116,7 @@ export const users = [
     status: "active",
     email: "charlie.green@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 8,
@@ -121,6 +128,7 @@ export const users = [
     status: "active",
     email: "sophia.black@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 9,
@@ -132,6 +140,7 @@ export const users = [
     status: "active",
     email: "oliver.grey@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
   {
     id: 10,
@@ -143,6 +152,7 @@ export const users = [
     status: "active",
     email: "emma.red@example.com",
     role: [roles.STUDENT],
+    designation: "Computer Science Student",
   },
 ];
 
@@ -701,7 +711,7 @@ export const courseData = [
   },
 ];
 
-export const forumData = [
+export let forumData = [
   {
     id: 1,
     title: "Introduction to Programming",
@@ -767,7 +777,7 @@ export const forumData = [
   {
     id: 3,
     title: "Web Development Bootcamp",
-    createdUserId: 1,
+    createdUserId: 2,
     description:
       "Join the conversation on web development technologies, frameworks, and best practices. Share your projects and seek feedback from the community.",
     date: "2023-03-10",
@@ -798,7 +808,7 @@ export const forumData = [
   {
     id: 4,
     title: "Artificial Intelligence Ethics",
-    createdUserId: 1,
+    createdUserId: 3,
     description:
       "Delve into the ethical considerations surrounding artificial intelligence. Discuss responsible AI development, bias, and the societal impact of AI.",
     date: "2023-04-02",
@@ -829,7 +839,7 @@ export const forumData = [
   {
     id: 5,
     title: "Data Science Challenges",
-    createdUserId: 1,
+    createdUserId: 4,
     description:
       "Share your experiences tackling real-world data science challenges. Discuss data cleaning, feature engineering, and model evaluation strategies.",
     date: "2023-05-20",
@@ -860,7 +870,7 @@ export const forumData = [
   {
     id: 6,
     title: "Cybersecurity Awareness",
-    createdUserId: 1,
+    createdUserId: 5,
     description:
       "Stay informed about the latest trends in cybersecurity. Discuss threat mitigation, best practices, and share resources to enhance digital security.",
     date: "2023-06-08",
@@ -891,7 +901,7 @@ export const forumData = [
   {
     id: 7,
     title: "Mobile App Development Insights",
-    createdUserId: 1,
+    createdUserId: 6,
     description:
       "Connect with fellow mobile app developers. Discuss platform-specific challenges, user experience design, and share insights into the app development lifecycle.",
     date: "2023-07-15",
@@ -922,7 +932,7 @@ export const forumData = [
   {
     id: 8,
     title: "Blockchain and Cryptocurrency",
-    createdUserId: 1,
+    createdUserId: 7,
     description:
       "Explore the world of blockchain technology and cryptocurrencies. Discuss decentralized finance, smart contracts, and the future of digital currency.",
     date: "2023-08-03",

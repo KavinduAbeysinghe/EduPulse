@@ -1,6 +1,9 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
   Box,
-  ButtonGroup,
   Chip,
   Divider,
   Grid,
@@ -12,23 +15,16 @@ import {
   ListItemText,
   Stack,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { FormTextField } from "../../components/inputs/FormTextField";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { useFieldArray, useForm } from "react-hook-form";
-import { CardHeading } from "../../components/common/CardHeading";
-import { PrimaryButton } from "../../components/buttons/PrimaryButton";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { CustomRadioGroup } from "../../components/radio/CustomRadioGroup";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
-import { commonValidationError, quizData } from "../../util";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNotification } from "../../contexts/NotificationContext";
 import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
+import { PrimaryButton } from "../../components/buttons/PrimaryButton";
+import { FormTextField } from "../../components/inputs/FormTextField";
+import { CustomRadioGroup } from "../../components/radio/CustomRadioGroup";
+import { useNotification } from "../../contexts/NotificationContext";
+import { commonValidationError } from "../../util";
 
 interface AddQuizProps {
   appendQuiz: any;
@@ -58,6 +54,8 @@ export const AddQuiz = ({
   const [isEditQues, setIsEditQues] = useState<boolean>(false);
 
   const [editQuesId, setEditQuesId] = useState<any>("");
+
+  const targetElementRef = useRef<any>(null);
 
   const validationSchema = Yup.object().shape({
     // hours: Yup.number()
@@ -153,6 +151,7 @@ export const AddQuiz = ({
             return newArr;
           });
         }
+        setIsEditQues(false);
         setValue("question", "");
         setTempAnswerId("");
         setTempAnswerIndex("");
@@ -164,6 +163,13 @@ export const AddQuiz = ({
   };
 
   const handleEdit = (id: number) => {
+    if (targetElementRef) {
+      targetElementRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
     setIsEditQues(true);
     setEditQuesId(id);
     const ques = questionsList?.find((q: any) => q?.questionId === id);
@@ -186,6 +192,8 @@ export const AddQuiz = ({
 
   const handleRemoveOpt = (id: number) => {
     setTempOptions((prev) => [...prev]?.filter((d: any) => d?.optionId !== id));
+    setTempAnswerIndex("");
+    setTempAnswerId("");
   };
 
   const handleAddQuiz = (data: any) => {
@@ -295,7 +303,10 @@ export const AddQuiz = ({
         />
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <Box sx={{ backgroundColor: "#eee", p: 3, borderRadius: "10px" }}>
+        <Box
+          ref={targetElementRef}
+          sx={{ backgroundColor: "#f6f6f6", p: 3, borderRadius: "10px" }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={12}>
               <FormTextField

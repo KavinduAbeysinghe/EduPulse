@@ -1,4 +1,5 @@
 import {
+  faEllipsis,
   faEye,
   faPenToSquare,
   faTrash,
@@ -10,7 +11,9 @@ import {
   Chip,
   Grid,
   IconButton,
+  Popover,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { FormTextField } from "../../components/inputs/FormTextField";
@@ -31,6 +34,7 @@ import { courseData, roles } from "../../util";
 import AlertDialogSlide from "../../components/modals/AlertDialog";
 import { useNotification } from "../../contexts/NotificationContext";
 import { useAuthContext } from "../../contexts/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const SearchCourse = () => {
   const location = useLocation();
@@ -231,7 +235,8 @@ export const SearchCourse = () => {
             tableHeaders={coursesTableHeads}
             id={"id"}
             paginate={true}
-            actionButtons={actionButtons}
+            // actionButtons={actionButtons}
+            viewMoreOptions={actionButtons}
           />
         </Box>
       </Box>
