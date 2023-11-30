@@ -7,13 +7,13 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
-    <NotificationContextProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <NotificationContextProvider>
         <AuthContextProvider>
           <MainLayout />
         </AuthContextProvider>
-      </BrowserRouter>
-    </NotificationContextProvider>
+      </NotificationContextProvider>
+    </BrowserRouter>
   );
 }
 

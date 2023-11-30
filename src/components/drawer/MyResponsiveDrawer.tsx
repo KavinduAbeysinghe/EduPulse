@@ -1,37 +1,36 @@
+import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
+import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import MenuIcon from "@mui/icons-material/Menu";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import {
-  Toolbar,
+  AppBar,
+  Avatar,
+  Box,
   Divider,
+  Drawer,
+  IconButton,
+  InputBase,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Box,
-  AppBar,
-  IconButton,
-  Typography,
-  Drawer,
   Stack,
-  Avatar,
-  styled,
+  Toolbar,
+  Typography,
   alpha,
-  InputBase,
+  styled,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import MenuIcon from "@mui/icons-material/Menu";
-import ProfilePic from "../../assets/images/person3.jpg";
-import { Breadcrumb } from "../breadcrumbs/BreadCrumb";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
-import QuizRoundedIcon from "@mui/icons-material/QuizRounded";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import WorkspacesRoundedIcon from "@mui/icons-material/WorkspacesRounded";
-import WbSunnyRoundedIcon from "@mui/icons-material/WbSunnyRounded";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { Breadcrumb } from "../breadcrumbs/BreadCrumb";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { userData, users } from "../../util";
+import { CustomBackdrop } from "../backdrops/CustomBackdrop";
 
 const drawerWidth = 220;
 
@@ -78,7 +77,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const MyResponsiveDrawer = () => {
+  const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const { authContext } = useAuthContext();
+
+  const [userDetails, setUserDetails] = useState<any>(null);
+
+  useLayoutEffect(() => {
+    setUserDetails(authContext?.user);
+  }, [authContext]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -124,7 +133,15 @@ export const MyResponsiveDrawer = () => {
   ];
 
   const handleLogout = () => {
-    navigate("/");
+    setShowBackdrop(true);
+    const timeout = setTimeout(() => {
+      sessionStorage.clear();
+      localStorage.clear();
+      navigate("/");
+      setShowBackdrop(false);
+      window.history.replaceState(null, "", "/");
+    }, 1000);
+    return () => clearTimeout(timeout);
   };
 
   const theme = useTheme();
@@ -182,10 +199,10 @@ export const MyResponsiveDrawer = () => {
           //   sx={{ borderBottomRightRadius: "50px" }}
           //   sx={{ backgroundColor: "primary.dark", borderRadius: "10px" }}
         >
-          <Avatar alt="Remy Sharp" src="" />
+          <Avatar alt="Remy Sharp" src={userDetails?.profileImg} />
           <Box textAlign={"center"}>
             <Typography fontSize={"small"} fontWeight={500} color={"#fff"}>
-              Steph Williams
+              {userDetails?.name}
             </Typography>
             <Typography
               fontSize={"small"}
@@ -193,15 +210,15 @@ export const MyResponsiveDrawer = () => {
                 theme.palette.secondary.dark
               )}
             >
-              steph.w@gmail.com
+              {userDetails?.email}
             </Typography>
           </Box>
           <LogoutRoundedIcon
-            fontSize="small"
+            // fontSize="small"
             sx={{
               color: "text.secondary",
               cursor: "pointer",
-              ":hover": { color: "primary.main" },
+              ":hover": { color: "black" },
             }}
             onClick={handleLogout}
           />
@@ -220,6 +237,7 @@ export const MyResponsiveDrawer = () => {
 
   return (
     <>
+      <CustomBackdrop open={showBackdrop} />
       <AppBar
         className=""
         position="fixed"

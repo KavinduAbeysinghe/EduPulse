@@ -2,18 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import {
-  Avatar,
-  AvatarGroup,
-  CardActionArea,
-  Divider,
-  IconButton,
-  Stack,
-} from "@mui/material";
-import { CustomChip } from "../../components/chips/CustomChip";
-import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
-import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { Avatar, AvatarGroup, CardActionArea, Stack } from "@mui/material";
 
 interface ForumCardProps {
   img: any;
@@ -50,6 +39,7 @@ export const ForumCard = ({
     >
       <CardActionArea>
         <CardMedia
+          loading="lazy"
           component="img"
           height="100"
           image={img}

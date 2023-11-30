@@ -1,21 +1,30 @@
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./login/Login";
-import { Dashboard } from "./dashboard/Dashboard";
 import { Box, CssBaseline } from "@mui/material";
 import { MyResponsiveDrawer } from "../components/drawer/MyResponsiveDrawer";
 import { CourseManagement } from "./courseManagement/CourseManagement";
 import { ModuleManagement } from "./moduleManagement/ModuleManagement";
 import { UserManagement } from "./userManagement/UserManagement";
 import { ForumManagement } from "../components/forums/ForumManagement";
-import { AuthContextProvider, useAuthContext } from "../contexts/AuthContext";
+import { useAuthContext } from "../contexts/AuthContext";
 import { ProtectedRoute } from "./common/ProtectedRoute";
 import { Unauthorized } from "./common/Unauthorized";
+import { roles } from "../util";
+import React, { Suspense } from "react";
+
+const Dashboard = React.lazy(() => import("../views/dashboard/Dashboard"));
 
 export const MainLayout = () => {
+  const { authContext } = useAuthContext();
+
   return (
     <Routes>
       <Route element={<Login />} path="/" />
-      <Route element={<Layout />} path="/control/*" />
+      <Route
+        element={<ProtectedRoute isRouteAccessible={authContext.isLoggedIn} />}
+      >
+        <Route element={<Layout />} path="/control/*" />
+      </Route>
       <Route element={<Unauthorized />} path="/unauthorized" />
     </Routes>
   );
@@ -24,7 +33,7 @@ export const MainLayout = () => {
 const Layout = () => {
   // const drawerWidth = 210;
 
-  const { authContext } = useAuthContext();
+  const { authorizeRole } = useAuthContext();
 
   return (
     <Box display={"flex"} sx={{ backgroundColor: "rgb(240, 242, 245)" }}>
@@ -46,20 +55,29 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                roles={["STAFF", "ADMIN", "STUDENT"]}
-                userRoles={authContext?.roles}
-                isLoggedIn={authContext?.isLoggedIn}
+                isRouteAccessible={authorizeRole([
+                  roles.ADMIN,
+                  roles.STAFF,
+                  roles.STUDENT,
+                ])}
+                redirectRoute="/unauthorized"
               />
             }
           >
-            <Route element={<Dashboard />} path="/dashboard" />
+            <Route
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Dashboard />
+                </Suspense>
+              }
+              path="/dashboard"
+            />
           </Route>
           <Route
             element={
               <ProtectedRoute
-                roles={["STAFF", "ADMIN", "STUDENT"]}
-                userRoles={authContext?.roles}
-                isLoggedIn={authContext?.isLoggedIn}
+                isRouteAccessible={authorizeRole([roles.STAFF, roles.ADMIN])}
+                redirectRoute="/unauthorized"
               />
             }
           >
@@ -68,9 +86,8 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                roles={["STAFF"]}
-                userRoles={authContext?.roles}
-                isLoggedIn={authContext?.isLoggedIn}
+                isRouteAccessible={authorizeRole([roles.STAFF, roles.ADMIN])}
+                redirectRoute="/unauthorized"
               />
             }
           >
@@ -79,9 +96,8 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                roles={["STAFF", "ADMIN", "STUDENT"]}
-                userRoles={authContext?.roles}
-                isLoggedIn={authContext?.isLoggedIn}
+                isRouteAccessible={authorizeRole([roles.ADMIN])}
+                redirectRoute="/unauthorized"
               />
             }
           >
@@ -90,9 +106,12 @@ const Layout = () => {
           <Route
             element={
               <ProtectedRoute
-                roles={["STAFF", "ADMIN", "STUDENT"]}
-                userRoles={authContext?.roles}
-                isLoggedIn={authContext?.isLoggedIn}
+                isRouteAccessible={authorizeRole([
+                  roles.STAFF,
+                  roles.ADMIN,
+                  roles.STUDENT,
+                ])}
+                redirectRoute="/unauthorized"
               />
             }
           >

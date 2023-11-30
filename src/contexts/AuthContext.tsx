@@ -8,43 +8,52 @@ import {
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  roles: Array<string>;
-  userId: any;
+  roles: Array<number>;
+  user: any;
 }
 
 interface AuthContextProps {
   authContext: AuthContextType;
   setAuthContext: (obj: any) => void;
+  authorizeRole: any;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthContextProvider: React.FC<any> = ({ children }) => {
-  const [authContext, setAuthContext] = useState<AuthContextType>({
-    isLoggedIn: false,
-    roles: [],
-    userId: "",
+  const [authContext, setAuthContext] = useState<AuthContextType>(() => {
+    const state = sessionStorage.getItem("authContext");
+    return state
+      ? JSON.parse(state)
+      : { isLoggedIn: false, roles: [], user: "" };
   });
 
-  const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
-    console.log(JSON.stringify(authContext));
+    console.log(authContext);
+
     sessionStorage.setItem("authContext", JSON.stringify(authContext));
   }, [authContext]);
 
-  useLayoutEffect(() => {
-    const state = sessionStorage.getItem("authContext");
+  // useLayoutEffect(() => {
+  //   const state = sessionStorage.getItem("authContext");
+  //   if (state) {
+  //     setAuthContext(JSON.parse(state));
+  //   }
+  // }, []);
 
-    if (state) {
-      console.log(JSON.stringify(JSON.parse(state)));
-      setAuthContext(JSON.parse(state));
-      setLoading(false);
-    }
-  }, []);
+  const authorizeRole = (roles: Array<number>) => {
+    console.log(
+      authContext.roles.find((role) => roles.includes(role)) ? true : false
+    );
+    return authContext.roles.find((role) => roles.includes(role))
+      ? true
+      : false;
+  };
 
   return (
-    <AuthContext.Provider value={{ authContext, setAuthContext }}>
+    <AuthContext.Provider
+      value={{ authContext, setAuthContext, authorizeRole }}
+    >
       {children}
     </AuthContext.Provider>
   );

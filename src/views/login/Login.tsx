@@ -8,11 +8,12 @@ import {
   ThemeProvider,
   Typography,
   createTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { FormTextField } from "../../components/inputs/FormTextField";
 import { FormButton } from "../../components/buttons/FormButton";
 import { FormSwitch } from "../../components/switches/FormSwitch";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { useForm } from "react-hook-form";
@@ -69,7 +70,7 @@ export const Login = () => {
           ...prevState,
           isLoggedIn: true,
           roles: user?.role,
-          userId: user?.id,
+          user: user,
         }));
         navigate(from, { replace: true });
       } else {
@@ -91,42 +92,61 @@ export const Login = () => {
     },
   });
 
+  const media = useMediaQuery(`(min-width:900px)`);
+
+  const media2 = useMediaQuery(`(min-width:409px)`);
+
+  // useLayoutEffect(() => {
+  //   window.history.replaceState(null, "", "/");
+  // }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CustomBackdrop open={showBackdrop} />
       <Box height={"100vh"} className={"login-container"}>
         <Grid container height={"100%"}>
+          {media && (
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={7}
+              py={3}
+              pl={3}
+              pr={{ xs: 3, sm: 3, md: 0 }}
+              position={"relative"}
+              // overflow={"hidden"}
+            >
+              <img
+                src="https://media.edapp.com/image/upload/v1600109548/registration/login-background.jpg"
+                alt="login-bg"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderTopLeftRadius: "17px",
+                  borderBottomLeftRadius: "17px",
+                }}
+              />
+              <Box p={10} position={"absolute"} top={0} zIndex={2}>
+                <Typography variant="h2" mt={3} color={"#eee"}>
+                  Edu Pulse
+                </Typography>
+                <Typography mt={1} color={"#eee"}>
+                  Your Learning Partner
+                </Typography>
+              </Box>
+            </Grid>
+          )}
           <Grid
             item
+            my={3}
+            pr={3}
             xs={12}
-            sm={6}
-            md={7}
-            py={3}
-            pl={3}
-            position={"relative"}
-            // overflow={"hidden"}
+            sm={12}
+            md={5}
+            pl={{ xs: 3, sm: 3, md: 0 }}
           >
-            <img
-              src="https://media.edapp.com/image/upload/v1600109548/registration/login-background.jpg"
-              alt="login-bg"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderTopLeftRadius: "17px",
-                borderBottomLeftRadius: "17px",
-              }}
-            />
-            <Box p={10} position={"absolute"} top={0} zIndex={2}>
-              <Typography variant="h2" mt={3} color={"#eee"}>
-                Edu Pulse
-              </Typography>
-              <Typography mt={1} color={"#eee"}>
-                Your Learning Partner
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item my={3} pr={3} xs={12} sm={6} md={5}>
             <Box
               height={"100%"}
               className="login-form"
@@ -135,11 +155,20 @@ export const Login = () => {
               alignItems={"center"}
               justifyContent={"center"}
               position={"relative"}
+              sx={{
+                borderTopRightRadius: "17px !important",
+                borderTopLeftRadius: !media
+                  ? "17px !important"
+                  : "0px !important",
+                borderBottomRightRadius: "17px !important",
+                borderBottomLeftRadius: !media ? "17px" : "0px !important",
+              }}
             >
               <Stack
-                width={"380px"}
+                // maxWidth={"380px"}
                 direction={"column"}
                 justifyContent={"center"}
+                m={2}
               >
                 <Typography
                   color={"text.primary"}
@@ -182,11 +211,12 @@ export const Login = () => {
                       }}
                     />
                     <Stack
-                      direction={"row"}
+                      direction={!media2 ? "column-reverse" : "row"}
                       justifyContent={"space-between"}
                       alignItems={"center"}
                       mt={2}
                       flexWrap={"wrap"}
+                      gap={2}
                     >
                       <FormSwitch control={undefined} label={"Remember Me"} />
                       <Typography color={"text.secondary"} textAlign={"end"}>

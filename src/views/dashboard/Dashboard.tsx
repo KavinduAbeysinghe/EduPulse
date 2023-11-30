@@ -9,6 +9,7 @@ import {
   Stack,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { ActivityCard } from "./ActivityCard";
@@ -25,8 +26,17 @@ import profileImg from "../../assets/images/person3.jpg";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { InnerModal } from "../../components/modals/CustomModal";
+import { useAuthContext } from "../../contexts/AuthContext";
 
-export const Dashboard = () => {
+const Dashboard = () => {
+  const { authContext } = useAuthContext();
+
+  const [userDetails, setUserDetails] = useState<any>(null);
+
+  useLayoutEffect(() => {
+    setUserDetails(authContext?.user);
+  }, [authContext]);
+
   const [noticeState, setNoticeState] = useState<Array<any>>([]);
 
   const p1 = 75;
@@ -264,6 +274,8 @@ export const Dashboard = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  const media = useMediaQuery("(min-width: 1366px)");
+
   return (
     <>
       <InnerModal
@@ -291,7 +303,7 @@ export const Dashboard = () => {
                   >
                     <Box>
                       <Typography fontWeight={600} variant="h4">
-                        Hello, Steph !
+                        Hello, {userDetails?.name} !
                       </Typography>
                       <Typography color={"text.secondary"} mt={1}>
                         Welcome to the dashboard of Edu Pulse xD
@@ -349,17 +361,20 @@ export const Dashboard = () => {
                         item
                         xs={12}
                         sm={12}
-                        md={4}
+                        md={6}
+                        lg={4}
                         display={"flex"}
                         justifyContent={"center"}
                         alignItems={"center"}
                         gap={1}
                       >
-                        <Typography fontWeight={500}>{d?.title}</Typography>
                         <CircularProgressWithLabel
                           value={d?.value}
                           color={d?.color}
                         />
+                        <Typography fontWeight={500} width={110}>
+                          {d?.title}
+                        </Typography>
                       </Grid>
                     ))}
                   </Grid>
@@ -396,14 +411,16 @@ export const Dashboard = () => {
                     alignItems={"center"}
                     justifyContent={"center"}
                     gap={2}
+                    useFlexGap
+                    flexWrap={"wrap"}
                   >
                     <Avatar
                       alt="Remy Sharp"
-                      src={profileImg}
+                      src={userDetails?.profileImg}
                       sx={{ width: 100, height: 100 }}
                     />
                     <Box>
-                      <Typography variant="h6">Steph Williams</Typography>
+                      <Typography variant="h6">{userDetails?.name}</Typography>
                       <Typography fontSize={"small"} color={"text.secondary"}>
                         Computer Science Student
                       </Typography>
@@ -501,3 +518,5 @@ export const Dashboard = () => {
     </>
   );
 };
+
+export default Dashboard;
