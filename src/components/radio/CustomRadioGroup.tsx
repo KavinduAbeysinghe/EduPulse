@@ -16,6 +16,8 @@ interface CustomRadioGroupProps {
   helperText: any;
   id: string;
   label: string;
+  disabled?: boolean;
+  val?: any;
 }
 
 export const CustomRadioGroup = ({
@@ -25,6 +27,8 @@ export const CustomRadioGroup = ({
   helperText,
   id,
   label,
+  disabled,
+  val,
 }: CustomRadioGroupProps) => {
   const [value, setValue] = useState<any>("");
   return (
@@ -33,6 +37,7 @@ export const CustomRadioGroup = ({
       //   sx={{ px: 3, pb: 3, pt: 1 }}
       variant="standard"
       fullWidth
+      disabled={disabled}
     >
       <FormLabel id={`radio-label-for-${id}`}>{label}</FormLabel>
       <Controller
@@ -40,12 +45,11 @@ export const CustomRadioGroup = ({
           <RadioGroup
             // row
             aria-labelledby={`radio-label-for-${id}`}
-            value={value}
+            value={val ? val : value}
             onChange={(e) => {
               onChange(e?.target?.value);
               setValue(e?.target?.value);
             }}
-            defaultValue={""}
           >
             {options?.map((opt: any) => (
               <FormControlLabel

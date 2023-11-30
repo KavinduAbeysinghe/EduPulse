@@ -38,7 +38,7 @@ export const Breadcrumb = () => {
           sx={{ cursor: "pointer", fontSize: "small" }}
           underline="hover"
           color={"inherit"}
-          onClick={() => {}}
+          onClick={() => navigate("/control/dashboard")}
         >
           <FontAwesomeIcon icon={faHouse} />
         </Link>

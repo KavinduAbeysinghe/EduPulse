@@ -153,6 +153,7 @@ export const ModuleContent = () => {
       title: "Add Quiz",
       body: (
         <AddQuiz
+          setShowModal={setShowModal}
           appendQuiz={appendQuiz}
           quizes={quizFields}
           sectionList={quizFields?.map((m: any) => ({

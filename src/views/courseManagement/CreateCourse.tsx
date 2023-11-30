@@ -275,7 +275,7 @@ export const CreateCourse = () => {
               justifyContent={"flex-end"}
             >
               <PrimaryButton
-                text={"> Create Course"}
+                text={"Create Course"}
                 onClick={handleSubmit(onSubmit)}
               />
             </Grid>

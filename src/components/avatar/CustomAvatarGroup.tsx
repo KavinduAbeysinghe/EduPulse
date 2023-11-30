@@ -8,7 +8,7 @@ interface AvatarGroupProps {
 export const CustomAvatarGroup = ({ images }: AvatarGroupProps) => {
   return (
     <AvatarGroup
-      max={4}
+      max={3}
       sx={{
         justifyContent: "start",
       }}

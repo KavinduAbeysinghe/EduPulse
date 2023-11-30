@@ -1,27 +1,32 @@
-import { Box, Chip, Grid, IconButton, Stack, Typography } from "@mui/material";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
-import { useForm } from "react-hook-form";
-import { FormDropdown } from "../../components/dropdowns/FormDropdown";
-import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
-import { PrimaryButton } from "../../components/buttons/PrimaryButton";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import { useLocation, useNavigate } from "react-router-dom";
-import SearchTable from "../../components/tables/SearchTable";
-import { CustomChip } from "../../components/chips/CustomChip";
-import { CustomAvatarGroup } from "../../components/avatar/CustomAvatarGroup";
-import { UserColumn } from "../../components/common/UserColumn";
 import {
   faEye,
   faPenToSquare,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import AlertDialogSlide from "../../components/modals/AlertDialog";
-import { courseData, moduleData, roles, userData } from "../../util";
-import { SearchButton } from "../../components/buttons/SearchButton";
-import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
+import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
+import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FormAutocomplete } from "../../components/autocomplete/FormAutocomplete";
+import { CustomAvatarGroup } from "../../components/avatar/CustomAvatarGroup";
+import { CustomBackdrop } from "../../components/backdrops/CustomBackdrop";
+import { PrimaryButton } from "../../components/buttons/PrimaryButton";
+import { SearchButton } from "../../components/buttons/SearchButton";
+import { CustomChip } from "../../components/chips/CustomChip";
+import { UserColumn } from "../../components/common/UserColumn";
+import { FormDropdown } from "../../components/dropdowns/FormDropdown";
+import AlertDialogSlide from "../../components/modals/AlertDialog";
+import SearchTable from "../../components/tables/SearchTable";
 import { useAuthContext } from "../../contexts/AuthContext";
+import {
+  commonDateFormat,
+  courseData,
+  moduleData,
+  roles,
+  userData,
+} from "../../util";
 
 export const SearchModules = () => {
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
@@ -84,6 +89,10 @@ export const SearchModules = () => {
   const resetSearch = () => {
     setShowBackdrop(true);
     const timeout = setTimeout(() => {
+      setValue("courseId", "");
+      setValue("moduleName", "");
+      setValue("moduleLead", "");
+      setValue("year", "");
       setModuleTableData(formatData(moduleData));
       setShowBackdrop(false);
     }, 1000);
@@ -108,7 +117,7 @@ export const SearchModules = () => {
       code: d?.code,
       title: d?.title,
       lead: <UserColumn id={d?.lead} />,
-      createdDate: d?.createdDate,
+      createdDate: dayjs(new Date(d?.createdDate)).format(commonDateFormat),
       status:
         d?.status === "active" ? (
           <CustomChip label={"Active"} type="success" />
@@ -255,7 +264,7 @@ export const SearchModules = () => {
                   setValue={setValue}
                   label={"Module Name"}
                   options={moduleList}
-                  id={""}
+                  id={"moduleName"}
                   required={false}
                   disabled={!courseId}
                   control={control}
@@ -280,12 +289,12 @@ export const SearchModules = () => {
                 <Box flexGrow={1}>
                   <FormDropdown
                     label={"Year"}
-                    name={"year"}
                     options={getYearsList()}
                     helperText={""}
                     control={control}
                     fullWidth
                     disabled={!courseId}
+                    name={""}
                   />
                 </Box>
                 <SearchButton

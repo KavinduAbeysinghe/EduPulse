@@ -126,7 +126,7 @@ const SearchTable = ({
                   </React.Fragment>
                 ))}
                 {actionButtons?.length ? (
-                  <StyledTableCell align="right">
+                  <StyledTableCell align="right" width={116}>
                     {actionButtons?.map((b, index) => (
                       <ActionButton
                         key={index}

@@ -159,8 +159,12 @@ export const Login = () => {
                   <Typography variant="h2" mt={3} color={"#eee"}>
                     Edu Pulse
                   </Typography>
-                  <Typography mt={1} color={"#eee"}>
+                  <Typography fontSize={"large"} mt={1} color={"#eee"}>
                     Your Learning Partner
+                  </Typography>
+                  <Typography mt={1} color={"text.secondary"}>
+                    - Unlock a world of knowledge with our intuitive learning
+                    management system.
                   </Typography>
                 </Box>
               </Grid>
@@ -271,7 +275,7 @@ export const Login = () => {
                     fullWidth
                     onClick={handleSubmit(onSubmit)}
                   /> */}
-                    <Divider>Or</Divider>
+                    <Divider sx={{ color: "text.secondary" }}>Or</Divider>
                     <FormButton
                       text={"Continue with Email"}
                       variant="outlined"

@@ -135,6 +135,7 @@ export const CreateUserForm = ({
         value: d?.nationalityId,
       }))
     );
+    setValue1("role", roles.STUDENT);
   }, []);
 
   const handleCreateUser = (data: any) => {
@@ -308,7 +309,7 @@ export const CreateUserForm = ({
               </Grid>
               <Grid item md={12} container justifyContent={"end"}>
                 <PrimaryButton
-                  text={"> Create User"}
+                  text={"Create User"}
                   onClick={handleSubmit1(handleCreateUser)}
                 />
               </Grid>
@@ -365,7 +366,7 @@ export const CreateUserForm = ({
                 alignItems={"center"}
               >
                 <PrimaryButton
-                  text={"> Save"}
+                  text={"Save"}
                   onClick={handleSubmit2(handleProfileUpdate)}
                 />
               </Grid>

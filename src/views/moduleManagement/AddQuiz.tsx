@@ -34,14 +34,22 @@ interface AddQuizProps {
   appendQuiz: any;
   quizes: any;
   sectionList: Array<any>;
+  setShowModal: any;
 }
 
-export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
+export const AddQuiz = ({
+  appendQuiz,
+  quizes,
+  sectionList,
+  setShowModal,
+}: AddQuizProps) => {
   const notify = useNotification();
 
   const [tempOptions, setTempOptions] = useState<Array<any>>([]);
 
   const [tempAnswerId, setTempAnswerId] = useState<any>("");
+
+  const [tempAnswerIndex, setTempAnswerIndex] = useState<any>("");
 
   const [radioOptions, setRadioOptions] = useState<Array<any>>([]);
 
@@ -119,35 +127,39 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
 
   const handleAddQuestion = () => {
     if (question && tempOptions?.length > 0) {
-      console.log(isEditQues);
-
-      if (!isEditQues) {
-        setQuestionsList((prev) => [
-          {
-            questionId: prev.length + 1,
-            question: question,
-            answerOptionId: 1,
-            options: tempOptions,
-          },
-          ...prev,
-        ]);
+      if (tempAnswerIndex && tempAnswerId) {
+        if (!isEditQues) {
+          setQuestionsList((prev) => [
+            ...prev,
+            {
+              questionId: prev.length + 1,
+              question: question,
+              answerOptionId: tempAnswerId,
+              options: tempOptions,
+            },
+          ]);
+        } else {
+          setQuestionsList((prev) => {
+            let newArr = [...prev];
+            const i = newArr?.find((d: any) => d?.questionId === editQuesId);
+            const index = newArr.indexOf(i);
+            console.log(i, index);
+            newArr[index] = {
+              questionId: editQuesId,
+              question: question,
+              answerOptionId: tempAnswerId,
+              options: tempOptions,
+            };
+            return newArr;
+          });
+        }
+        setValue("question", "");
+        setTempAnswerId("");
+        setTempAnswerIndex("");
+        setTempOptions([]);
       } else {
-        setQuestionsList((prev) => {
-          let newArr = [...prev];
-          const i = newArr?.find((d: any) => d?.questionId === editQuesId);
-          const index = newArr.indexOf(i);
-          console.log(i, index);
-          newArr[index] = {
-            questionId: editQuesId,
-            question: question,
-            answerOptionId: 1,
-            options: tempOptions,
-          };
-          return newArr;
-        });
+        notify.warn("Please select an answer");
       }
-      setValue("question", "");
-      setTempOptions([]);
     }
   };
 
@@ -157,6 +169,8 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
     const ques = questionsList?.find((q: any) => q?.questionId === id);
     setValue("question", ques?.question);
     setTempOptions(ques?.options);
+    setTempAnswerId(ques?.answerOptionId);
+    setTempAnswerIndex(ques?.answerOptionId);
   };
 
   const handleRemove = (id: number) => {
@@ -165,8 +179,9 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
     );
   };
 
-  const handleSelectAnswer = (id: number) => {
+  const handleSelectAnswer = (id: number, index: number) => {
     setTempAnswerId(id);
+    setTempAnswerIndex(index + 1);
   };
 
   const handleRemoveOpt = (id: number) => {
@@ -188,7 +203,7 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
       });
       quizes[index] = d;
       console.log(quizes);
-
+      setShowModal(false);
       //   quizData?.data?.push({})
       // appendQuiz();
     } else {
@@ -314,7 +329,7 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
             </Grid>
             <Grid xs={12} sm={12} item md={12}>
               <List sx={{ width: "100%" }} aria-label="contacts">
-                {tempOptions?.map((o: any) => (
+                {tempOptions?.map((o: any, index) => (
                   <ListItem
                     key={o?.optionId}
                     disablePadding
@@ -329,17 +344,23 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
                     }
                   >
                     <ListItemButton
-                      onClick={() => handleSelectAnswer(o?.optionId)}
+                      onClick={() => handleSelectAnswer(o?.optionId, index)}
                     >
-                      <ListItemIcon>
-                        <CircleRoundedIcon fontSize="small" />
-                      </ListItemIcon>
+                      <ListItemIcon>{`(${index + 1})`}</ListItemIcon>
                       <ListItemText primary={o?.option} />
                     </ListItemButton>
                   </ListItem>
                 ))}
               </List>
             </Grid>
+            {tempAnswerIndex && (
+              <Grid item xs={12} sm={12} md={12}>
+                <Chip
+                  label={`Answer Number: ${tempAnswerIndex}`}
+                  sx={{ fontWeight: 700 }}
+                />
+              </Grid>
+            )}
             <Grid
               item
               xs={12}
@@ -376,17 +397,21 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
                 </IconButton>
               </Tooltip>
             </Stack>
-            <CustomRadioGroup
-              options={q?.options?.map((i: any) => ({
-                label: i?.option,
-                value: i?.optionId,
-              }))}
-              control={control}
-              error={false}
-              helperText={""}
-              id={``}
-              label={q?.question}
-            />
+            {
+              <CustomRadioGroup
+                options={q?.options?.map((i: any) => ({
+                  label: i?.option,
+                  value: i?.optionId,
+                }))}
+                control={control}
+                error={false}
+                helperText={""}
+                id={"question"}
+                label={q?.question}
+                disabled={false}
+                val={q.answerOptionId}
+              />
+            }
           </Grid>
         ))}
       </Grid>
@@ -399,7 +424,7 @@ export const AddQuiz = ({ appendQuiz, quizes, sectionList }: AddQuizProps) => {
         alignItems={"center"}
         justifyContent={"flex-end"}
       >
-        <PrimaryButton text={"> Save"} onClick={handleSubmit(handleAddQuiz)} />
+        <PrimaryButton text={"Save"} onClick={handleSubmit(handleAddQuiz)} />
       </Grid>
     </Grid>
   );

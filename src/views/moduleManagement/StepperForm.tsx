@@ -9,8 +9,10 @@ import { CreateModule } from "./CreateModule";
 import { ModuleContent } from "./ModuleContent";
 import { useLocation } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
+import { useNotification } from "../../contexts/NotificationContext";
 
 export default function HorizontalNonLinearStepper() {
+  const notify = useNotification();
   const [isModuleCreated, setIsModuleCreated] = useState<boolean>(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
@@ -45,13 +47,17 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
+    if (isModuleCreated) {
+      const newActiveStep =
+        isLastStep() && !allStepsCompleted()
+          ? // It's the last step, but not all steps have been completed,
+            // find the first step that has been completed
+            steps.findIndex((step, i) => !(i in completed))
+          : activeStep + 1;
+      setActiveStep(newActiveStep);
+    } else {
+      notify.warn("Please Create a Module First");
+    }
   };
 
   const handleBack = () => {
@@ -59,7 +65,11 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleStep = (step: number) => () => {
-    setActiveStep(step);
+    if (isModuleCreated) {
+      setActiveStep(step);
+    } else {
+      notify.warn("Please Create a Module First");
+    }
   };
 
   const handleComplete = () => {
