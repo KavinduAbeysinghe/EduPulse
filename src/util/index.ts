@@ -961,3 +961,96 @@ export let forumData = [
     ],
   },
 ];
+
+export const assignmentData = [
+  {
+    ID: 1,
+    title: "Week 1",
+    data: [
+      {
+        id: 1,
+        title: "Sample Assignment 1",
+        dueDate: "15-12-2023",
+        file: file,
+        isUploaded: false,
+        uploadedFile: "",
+      },
+      {
+        id: 2,
+        title: "Sample Assignment 2",
+        dueDate: "15-12-2023",
+        file: file,
+        isUploaded: true,
+        uploadedFile: file,
+      },
+    ],
+  },
+];
+
+export let gradeAssignmentsData = [
+  {
+    id: 1,
+    stuId: 2,
+    submittedDate: "2023-12-01",
+    submission: true,
+    overdueStatus: false,
+    file: file,
+    mark: "",
+    remark: "",
+    isGraded: false,
+  },
+  {
+    id: 2,
+    stuId: 3,
+    submittedDate: "2023-12-01",
+    submission: true,
+    overdueStatus: false,
+    file: file,
+    mark: "",
+    remark: "",
+    isGraded: false,
+  },
+  {
+    id: 3,
+    stuId: 4,
+    submittedDate: "2023-12-01",
+    submission: true,
+    overdueStatus: false,
+    file: file,
+    mark: "",
+    remark: "",
+    isGraded: false,
+  },
+  {
+    id: 4,
+    stuId: 5,
+    submittedDate: "2023-12-01",
+    submission: true,
+    overdueStatus: false,
+    file: file,
+    mark: "",
+    remark: "",
+    isGraded: false,
+  },
+  // {
+  //   id: 3,
+  //   stuId: 6,
+  //   submittedDate: "2023-12-01",
+  //   submission: true,
+  //   overdueStatus: false,
+  // },
+  // {
+  //   id: 3,
+  //   stuId: 4,
+  //   submittedDate: "2023-12-01",
+  //   submission: true,
+  //   overdueStatus: false,
+  // },
+];
+
+export const studentData2 = users
+  ?.filter((user: any) => user?.role.includes(roles.STUDENT))
+  ?.map((dta: any) => ({
+    ...dta,
+    courseId: Math.floor(Math.random() * (courseData.length - 1 + 1)) + 1,
+  }));

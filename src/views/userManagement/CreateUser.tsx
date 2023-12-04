@@ -15,14 +15,17 @@ export const CreateUser = () => {
       <Grid item xs={12} sm={12} md={12}>
         <CreateUserForm setIsUserCreated={setIsUserCreated} setRole={setRole} />
       </Grid>
-      {role === roles.STUDENT && (
+      {role === roles.STUDENT ? (
         <Grid item xs={12} sm={12} md={12}>
           <EnrolledCourses isUserCreated={isUserCreated} />
         </Grid>
+      ) : role === roles.STAFF ? (
+        <Grid item xs={12} sm={12} md={12}>
+          <EnrolledModules isUserCreated={isUserCreated} />
+        </Grid>
+      ) : (
+        <></>
       )}
-      {/* <Grid item xs={12} sm={12} md={12}>
-        <EnrolledModules isUserCreated={isUserCreated} />
-      </Grid> */}
     </Grid>
   );
 };

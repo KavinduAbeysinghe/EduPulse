@@ -1,7 +1,9 @@
+import { Box, Typography, IconButton } from "@mui/material";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface DocPreviewModalProps {
   open: boolean;
@@ -34,9 +36,22 @@ export const DocPreviewModal = ({
         fullWidth={true}
         maxWidth={maxWidth}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
       >
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Typography fontSize={"large"} fontWeight={700}>
+              {title}
+            </Typography>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <embed src={doc} type={docType} width="100%" height="600px" />
         </DialogContent>

@@ -34,10 +34,11 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb } from "../breadcrumbs/BreadCrumb";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { userData, users } from "../../util";
+import { roles, userData, users } from "../../util";
 import { CustomBackdrop } from "../backdrops/CustomBackdrop";
 import logo from "../../assets/images/logos.png";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
+import { useNotification } from "../../contexts/NotificationContext";
 
 const drawerWidth = 220;
 
@@ -84,7 +85,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const MyResponsiveDrawer = () => {
-  const { authContext } = useAuthContext();
+  const { authContext, authorizeRole } = useAuthContext();
 
   const [showBackdrop, setShowBackdrop] = useState<boolean>(false);
 
@@ -111,6 +112,7 @@ export const MyResponsiveDrawer = () => {
       name: "Dashboard",
       icon: <DashboardRoundedIcon fontSize="small" />,
       path: "/control/dashboard",
+      roles: [roles.STUDENT, roles.ADMIN, roles.STAFF],
     },
     // {
     //   name: "Workspace",
@@ -121,24 +123,38 @@ export const MyResponsiveDrawer = () => {
       name: "Courses",
       icon: <AssignmentRoundedIcon fontSize="small" />,
       path: "/control/course-management",
+      roles: [roles.STUDENT, roles.ADMIN, roles.STAFF],
     },
     {
       name: "Modules",
       icon: <ViewModuleIcon fontSize="small" />,
       path: "/control/module-management",
+      roles: [roles.STUDENT, roles.ADMIN, roles.STAFF],
     },
     {
       name: "Forums",
       icon: <QuizRoundedIcon fontSize="small" />,
       path: "/control/discussions-and-forums",
+      roles: [roles.STUDENT, roles.ADMIN, roles.STAFF],
     },
     {
       name: "Users",
       icon: <PeopleRoundedIcon fontSize="small" />,
       path: "/control/user-management",
+      roles: [roles.ADMIN, roles.STAFF],
     },
   ];
 
+  const notify = useNotification();
+
+  //   const handleDisabled = (roles: Array<any>) => {
+  //     if (authorizeRole(roles)) {
+  //       return true;
+  //     } else {
+  //       notify.warn("Access Denied");
+  //       return false;
+  //     }
+  //   };
   const handleLogout = () => {
     setShowBackdrop(true);
     const timeout = setTimeout(() => {
@@ -178,7 +194,10 @@ export const MyResponsiveDrawer = () => {
       <List>
         {sideBarOptions.map((opt: any) => (
           <ListItem key={opt?.name} disablePadding>
-            <ListItemButton onClick={() => handleNavigate(opt?.path)}>
+            <ListItemButton
+              onClick={() => handleNavigate(opt?.path)}
+              disabled={!authorizeRole(opt?.roles)}
+            >
               <ListItemIcon sx={{ color: "#fff" }}>{opt?.icon}</ListItemIcon>
               <ListItemText
                 color="text.secondary"
@@ -332,14 +351,13 @@ export const MyResponsiveDrawer = () => {
                   <Stack p={2} gap={1}>
                     {alertData?.map((alert) => (
                       <Slide
+                        key={alert.id}
                         direction="right"
                         in={true}
                         mountOnEnter
                         unmountOnExit
                       >
-                        <Alert key={alert.id} severity="info">
-                          {alert.message}
-                        </Alert>
+                        <Alert severity="info">{alert.message}</Alert>
                       </Slide>
                     ))}
                     <Box sx={{ justifyContent: "flex-end", display: "flex" }}>
@@ -390,6 +408,8 @@ export const MyResponsiveDrawer = () => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              background:
+                "linear-gradient(195deg, rgb(66, 66, 74), rgb(25, 25, 25)) !important",
             },
           }}
         >

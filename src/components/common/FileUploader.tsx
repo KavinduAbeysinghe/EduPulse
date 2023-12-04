@@ -2,6 +2,7 @@ import { IconButton, Box, Typography } from "@mui/material";
 import React, { useRef } from "react";
 import InsertPhotoRoundedIcon from "@mui/icons-material/InsertPhotoRounded";
 import { useNotification } from "../../contexts/NotificationContext";
+import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 
 interface FileUploaderProps {
   type: "file" | "image";
@@ -73,7 +74,11 @@ export const FileUploader = ({
             gap: 1,
           }}
         >
-          <InsertPhotoRoundedIcon fontSize={"large"} sx={{ color: "gray" }} />
+          {type === "file" ? (
+            <UploadFileRoundedIcon fontSize={"large"} sx={{ color: "gray" }} />
+          ) : (
+            <InsertPhotoRoundedIcon fontSize={"large"} sx={{ color: "gray" }} />
+          )}
           <Typography sx={{ color: "gray" }}>
             {type === "file" ? "File Upload" : "Insert Image"}
           </Typography>

@@ -1,12 +1,12 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { userData } from "../../util";
+import { userData, users } from "../../util";
 
 interface UserColumnProps {
   id: number;
 }
 
 export const UserColumn = ({ id }: UserColumnProps) => {
-  const user = userData?.find((d: any) => d?.id === id);
+  const user = users?.find((d: any) => d?.id === id);
 
   return (
     <Stack direction={"row"} gap={1}>

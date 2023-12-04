@@ -1,12 +1,6 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 import {
   IconButton,
   List,
@@ -15,13 +9,24 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import { InnerModal } from "../modals/CustomModal";
-import { DocPreviewModal } from "../modals/DocPreviewModal";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import MuiAccordionSummary, {
+  AccordionSummaryProps,
+} from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+import * as React from "react";
 import { useState } from "react";
+import { DocPreviewModal } from "../modals/DocPreviewModal";
 import { QuizModal } from "../modals/QuizModal";
+import { InnerModal } from "../modals/CustomModal";
+import { Assignment } from "../../views/moduleManagement/Assignment";
+import dayjs from "dayjs";
+import { commonDateFormat, roles } from "../../util";
 import { string } from "yup";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -61,17 +66,20 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 interface CustomizedAccordionsProps {
   data: Array<any>;
-  isQuiz: boolean;
+  type: "quiz" | "assignment" | "module";
 }
 
 export default function CustomizedAccordions({
   data,
-  isQuiz,
+  type,
 }: CustomizedAccordionsProps) {
   const [showModal, setShowModal] = React.useState(false);
   const [showQModal, setShowQModal] = React.useState(false);
+  const [showAModal, setShowAModal] = React.useState(false);
 
   const [docDetails, setDocDetails] = useState<any>(null);
+
+  const [assignmentDetails, setAssignmentDetails] = useState<any>(null);
 
   const [quizData, setQuizData] = useState<any>(null);
 
@@ -90,7 +98,6 @@ export default function CustomizedAccordions({
     link.click();
     document.body.removeChild(link);
   };
-
   const handlePreviewFile = (file: any) => {
     console.log(typeof file);
     if (typeof file === "string") {
@@ -119,8 +126,50 @@ export default function CustomizedAccordions({
     setShowQModal(true);
   };
 
+  const handlePreviewAssignment = (data: any) => {
+    console.log(data);
+    const fileData = data?.file;
+    let fileName = "";
+    if (typeof fileData === "string") {
+      const i = fileData?.split("/");
+      fileName = i[i.length - 1];
+    } else {
+      fileName = fileData?.name;
+    }
+    setAssignmentDetails({ ...data, fileName: fileName });
+    setShowAModal(true);
+  };
+
+  const { authorizeRole } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+
+  const handlePreviewGradeAssignment = (data: any) => {
+    searchParams.set("assignment", JSON.stringify(data));
+    navigate(`/control/module-management/grade-assignments?${searchParams}`);
+  };
+
   return (
     <div>
+      {assignmentDetails && (
+        <InnerModal
+          open={showAModal}
+          setOpen={setShowAModal}
+          maxWidth={"sm"}
+          title={assignmentDetails.title}
+          body={
+            <Assignment
+              data={assignmentDetails}
+              setOpen={setShowAModal}
+              assignments={data}
+            />
+          }
+        />
+      )}
       {quizData && (
         <QuizModal
           setQuizData={setQuizData}
@@ -167,7 +216,7 @@ export default function CustomizedAccordions({
                 <ListItem
                   disablePadding
                   secondaryAction={
-                    !isQuiz ? (
+                    type === "module" ? (
                       <IconButton
                         edge="end"
                         aria-label="download"
@@ -182,9 +231,13 @@ export default function CustomizedAccordions({
                 >
                   <ListItemButton
                     onClick={() =>
-                      !isQuiz
+                      type === "module"
                         ? handlePreviewFile(e?.file)
-                        : handlePreviewQuiz(e)
+                        : type === "quiz"
+                        ? handlePreviewQuiz(e)
+                        : authorizeRole([roles.STUDENT])
+                        ? handlePreviewAssignment(e)
+                        : handlePreviewGradeAssignment(e)
                     }
                   >
                     <ListItemIcon>

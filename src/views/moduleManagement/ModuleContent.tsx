@@ -5,11 +5,17 @@ import CustomizedAccordions from "../../components/accordion/CustomAccordion";
 import { InnerModal } from "../../components/modals/CustomModal";
 import { AddModuleMaterial } from "./AddModuleMaterial";
 import { useFieldArray, useForm } from "react-hook-form";
-import { moduleData, moduleMaterials, quizData } from "../../util";
+import {
+  assignmentData,
+  moduleData,
+  moduleMaterials,
+  quizData,
+} from "../../util";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation } from "react-router-dom";
 import { AddQuiz } from "./AddQuiz";
+import { AddAssignment } from "./AddAssignment";
 
 export const ModuleContent = () => {
   const location = useLocation();
@@ -95,6 +101,7 @@ export const ModuleContent = () => {
     if (page === "view" || page === "edit") {
       setValue("moduleMaterials", moduleMaterials);
       setValue("quizes", quizData);
+      setValue("assignments", assignmentData);
     } else {
       setValue("moduleMaterials", []);
       setValue("quizes", []);
@@ -107,6 +114,7 @@ export const ModuleContent = () => {
       title: "Add Module Materials",
       body: (
         <AddModuleMaterial
+          setShowModal={setShowModal}
           moduleMaterials={moduleMaterialsFields}
           appendModuleMaterials={appendModuleMaterials}
           sectionList={moduleMaterialsFields?.map((m: any) => ({
@@ -129,7 +137,8 @@ export const ModuleContent = () => {
       maxWidth: "sm",
       title: "Add Assignments",
       body: (
-        <AddModuleMaterial
+        <AddAssignment
+          setShowModal={setShowModal}
           moduleMaterials={assignmentsFields}
           appendModuleMaterials={appendAssignmentsFields}
           sectionList={assignmentsFields?.map((m: any) => ({
@@ -206,7 +215,7 @@ export const ModuleContent = () => {
             {moduleMaterialsFields.length ? (
               <CustomizedAccordions
                 data={moduleMaterialsFields}
-                isQuiz={false}
+                type={"module"}
               />
             ) : (
               <Typography>No Module Materials Available</Typography>
@@ -220,7 +229,10 @@ export const ModuleContent = () => {
             isDisabled={page === "view"}
           >
             {assignmentsFields.length ? (
-              <CustomizedAccordions data={assignmentsFields} isQuiz={false} />
+              <CustomizedAccordions
+                data={assignmentsFields}
+                type={"assignment"}
+              />
             ) : (
               <Typography>No Assigments Available</Typography>
             )}
@@ -233,7 +245,7 @@ export const ModuleContent = () => {
             isDisabled={page === "view"}
           >
             {quizFields.length ? (
-              <CustomizedAccordions data={quizFields} isQuiz={true} />
+              <CustomizedAccordions data={quizFields} type={"quiz"} />
             ) : (
               <Typography>No Quizes Available</Typography>
             )}

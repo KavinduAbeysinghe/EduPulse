@@ -45,9 +45,9 @@ export const AuthContextProvider: React.FC<any> = ({ children }) => {
   }, [location]);
 
   const authorizeRole = (roles: Array<number>) => {
-    console.log(
-      authContext.roles.find((role) => roles.includes(role)) ? true : false
-    );
+    // console.log(
+    //   authContext.roles.find((role) => roles.includes(role)) ? true : false
+    // );
     return authContext.roles.find((role) => roles.includes(role))
       ? true
       : false;

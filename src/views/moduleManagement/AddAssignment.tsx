@@ -25,26 +25,34 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TransitionGroup } from "react-transition-group";
+import { FormDatePicker } from "../../components/datepickers/FormDatePicker";
+import dayjs from "dayjs";
+import { assignmentData, commonDateFormat } from "../../util";
 
-interface AddModuleMaterialProps {
+interface AddAssignmentProps {
   moduleMaterials: Array<any>;
   appendModuleMaterials: any;
   sectionList: Array<any>;
   setShowModal: any;
 }
 
-export const AddModuleMaterial = ({
+export const AddAssignment = ({
   moduleMaterials,
   appendModuleMaterials,
   sectionList,
   setShowModal,
-}: AddModuleMaterialProps) => {
+}: AddAssignmentProps) => {
   const commonError = "Field is required";
 
   const validationSchema = Yup.object().shape({
     section: Yup.string(),
     selectSection: Yup.string().required(commonError),
     fileTitle: Yup.string().required(commonError),
+    dueDate: Yup.string()
+      .required(commonError)
+      .test("required-err", commonError, (value) => {
+        return !(value === undefined || value === null || value === "");
+      }),
   });
 
   const {
@@ -168,12 +176,19 @@ export const AddModuleMaterial = ({
     setFiles((prev) => [...prev]?.filter((i) => i !== data));
   };
 
-  const onSubmit = () => {
+  const onSubmit = (data: any) => {
     if (sectionSelection) {
       let d = moduleMaterials?.find((i: any) => i?.id === sectionSelection);
       const index = moduleMaterials.indexOf(d);
       files?.forEach((file) =>
-        d?.data?.push({ title: file?.title, file: file?.file })
+        d?.data?.push({
+          id: moduleMaterials?.length + 1,
+          title: file?.title,
+          file: file?.file,
+          dueDate: dayjs(new Date(data?.dueDate)).format(commonDateFormat),
+          isUploaded: false,
+          uploadedFile: "",
+        })
       );
       moduleMaterials[index] = d;
       console.log(moduleMaterials);
@@ -228,10 +243,20 @@ export const AddModuleMaterial = ({
           <FormTextField
             required={true}
             register={register("fileTitle")}
-            label={"File Title"}
+            label={"Assignment Title"}
             placeholder="Enter a title for the file"
             error={!!errors?.fileTitle?.message}
             helperText={errors?.fileTitle?.message?.toString()}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <FormDatePicker
+            label={"Due Date"}
+            error={!!errors?.dueDate?.message}
+            helperText={errors?.dueDate?.message?.toString()}
+            name={"dueDate"}
+            control={control}
+            required={true}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -285,7 +310,7 @@ export const AddModuleMaterial = ({
           display={"flex"}
           justifyContent={"flex-end"}
         >
-          <PrimaryButton text={"Save"} onClick={onSubmit} />
+          <PrimaryButton text={"Save"} onClick={handleSubmit(onSubmit)} />
         </Grid>
       </Grid>
     </>

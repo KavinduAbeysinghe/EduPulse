@@ -15,6 +15,7 @@ import {
   ListItemText,
   Stack,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -198,7 +199,6 @@ export const AddQuiz = ({
 
   const handleAddQuiz = (data: any) => {
     console.log(data);
-
     if (questionsList?.length > 0) {
       const d = quizes?.find((i: any) => i?.ID === data?.selectSection);
       const index = quizes?.indexOf(d);
@@ -339,30 +339,35 @@ export const AddQuiz = ({
               </IconButton> */}
             </Grid>
             <Grid xs={12} sm={12} item md={12}>
-              <List sx={{ width: "100%" }} aria-label="contacts">
-                {tempOptions?.map((o: any, index) => (
-                  <ListItem
-                    key={o?.optionId}
-                    disablePadding
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="download"
-                        onClick={() => handleRemoveOpt(o?.optionId)}
-                      >
-                        <DeleteRoundedIcon />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemButton
-                      onClick={() => handleSelectAnswer(o?.optionId, index)}
+              <>
+                <Typography color={"text.secondary"}>
+                  Please select an answer from the list view below
+                </Typography>
+                <List sx={{ width: "100%" }} aria-label="contacts">
+                  {tempOptions?.map((o: any, index) => (
+                    <ListItem
+                      key={o?.optionId}
+                      disablePadding
+                      secondaryAction={
+                        <IconButton
+                          edge="end"
+                          aria-label="download"
+                          onClick={() => handleRemoveOpt(o?.optionId)}
+                        >
+                          <DeleteRoundedIcon />
+                        </IconButton>
+                      }
                     >
-                      <ListItemIcon>{`(${index + 1})`}</ListItemIcon>
-                      <ListItemText primary={o?.option} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
+                      <ListItemButton
+                        onClick={() => handleSelectAnswer(o?.optionId, index)}
+                      >
+                        <ListItemIcon>{`(${index + 1})`}</ListItemIcon>
+                        <ListItemText primary={o?.option} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </>
             </Grid>
             {tempAnswerIndex && (
               <Grid item xs={12} sm={12} md={12}>
